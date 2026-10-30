@@ -1,0 +1,1 @@
+# Frontend\n\nFrontend implementation will be added after the MVP requirements and interface are defined.\n

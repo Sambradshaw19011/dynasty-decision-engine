@@ -8,3 +8,6 @@ python-dotenv
 requests
 jupyter
 pytest
+nflreadpy
+supabase
+python-dotenv

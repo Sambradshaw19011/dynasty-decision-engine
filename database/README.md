@@ -1,7 +1,5 @@
 # Database
 
-Database selection and schema are intentionally not finalized yet. Review the SRS and available source data before committing to PostgreSQL or defining production tables.
+Supabase/PostgreSQL is the planned central database for curated warehouse tables and query-serving analytics. The connection and `schema.sql` files are existing placeholders, not operational implementations.
 
-Planned files:
-- `connection.py`: database connection configuration
-- `schema.sql`: reviewed schema definition
+No migrations or production tables exist yet. The canonical schema plan is [../docs/database_schema.md](../docs/database_schema.md); future schema changes belong in `migrations/`. Do not apply changes to a live Supabase project as part of this planning scaffold.

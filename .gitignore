@@ -29,10 +29,28 @@ Thumbs.db
 # Local data (keep folder placeholders)
 data/raw/*
 data/processed/*
+data/staging/*
 data/external/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/external/.gitkeep
+!data/raw/nflverse/
+!data/raw/sleeper/
+!data/processed/nflverse/
+!data/processed/sleeper/
+!data/staging/
+data/raw/nflverse/*
+data/raw/sleeper/*
+data/processed/nflverse/*
+data/processed/sleeper/*
+!data/**/.gitkeep
 
 # Logs
+logs/*
+!logs/.gitkeep
 *.log
+
+# Spark
+.spark/
+metastore_db/
+derby.log

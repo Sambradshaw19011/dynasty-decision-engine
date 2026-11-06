@@ -1,2 +1,4 @@
 -- Dynasty Decision Engine
--- Initial placeholder. Define tables after reviewing source data and the SRS.
+-- Placeholder only; no production tables are defined here.
+-- The canonical schema plan is in ../docs/database_schema.md.
+-- Implement reviewed PostgreSQL migrations under database/migrations/.

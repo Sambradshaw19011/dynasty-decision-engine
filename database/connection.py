@@ -1,1 +1,1 @@
-"""Database connection utilities will be added after the database is selected."""
+"""Placeholder; Supabase/PostgreSQL connection support is not implemented yet."""

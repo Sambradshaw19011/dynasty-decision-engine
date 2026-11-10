@@ -122,18 +122,18 @@ def normalize_player(
 
     raw_gsis_id = clean_text(row.get("gsis_id"))
 
-    # Some historical records contain non-GSIS values in the gsis_id
-    # source column. Only populate the warehouse GSIS field when the
-    # identifier matches the standard GSIS format.
     gsis_id = (
         raw_gsis_id
         if raw_gsis_id and GSIS_PATTERN.fullmatch(raw_gsis_id)
         else None
     )
 
+    raw_espn_id = clean_text(row.get("espn_id"))
+
     return {
         "nflverse_player_id": player_identifier,
         "gsis_id": gsis_id,
+        "espn_id": raw_espn_id,
 
         "display_name": clean_text(row.get("display_name")),
         "common_first_name": clean_text(row.get("common_first_name")),

@@ -1,0 +1,257 @@
+
+import nflreadpy as nfl
+import pandas as pd
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+SEASON = 2026
+WEEK = 7
+TARGET_PLAYER = "Warner"
+TARGET_GAME = "2026_07_SF_ATL"
+
+# ============================================================
+# 1. LOAD NFLVERSE PLAY-BY-PLAY DATA
+# ============================================================
+
+print("=" * 80)
+print("LOADING NFLVERSE PLAY-BY-PLAY DATA")
+print("=" * 80)
+
+pbp = nfl.load_pbp(seasons=[SEASON])
+
+# Convert Polars DataFrame to pandas
+if hasattr(pbp, "collect"):
+    pbp = pbp.collect()
+
+if hasattr(pbp, "to_pandas"):
+    pbp = pbp.to_pandas()
+
+print(f"Total plays loaded: {len(pbp):,}")
+print(f"Total columns: {len(pbp.columns)}")
+
+# Filter to Week 7
+week7 = pbp[pbp["week"] == WEEK].copy()
+
+print(f"Week {WEEK} plays: {len(week7):,}")
+
+# ============================================================
+# 2. FIND ALL PLAYS INVOLVING FRED WARNER
+# ============================================================
+
+print("\n" + "=" * 80)
+print("SEARCHING WEEK 7 FOR FRED WARNER")
+print("=" * 80)
+
+text_columns = week7.select_dtypes(
+    include=["object", "string"]
+).columns
+
+warner_mask = pd.Series(False, index=week7.index)
+
+for column in text_columns:
+    warner_mask |= (
+        week7[column]
+        .astype(str)
+        .str.contains(TARGET_PLAYER, case=False, na=False)
+    )
+
+warner_plays = week7[warner_mask].copy()
+
+print(f"Plays mentioning Warner: {len(warner_plays)}")
+
+# ============================================================
+# 3. DEFINE RELEVANT COLUMNS
+# ============================================================
+
+columns_to_show = [
+    "game_id",
+    "week",
+    "play_id",
+    "qtr",
+    "posteam",
+    "defteam",
+    "return_team",
+    "play_type",
+    "desc",
+    "fumble",
+    "fumble_forced",
+    "fumble_lost",
+    "forced_fumble_player_1_team",
+    "forced_fumble_player_1_player_name",
+    "forced_fumble_player_2_team",
+    "forced_fumble_player_2_player_name",
+    "fumbled_1_team",
+    "fumbled_1_player_name",
+    "fumbled_2_team",
+    "fumbled_2_player_name",
+    "fumble_recovery_1_team",
+    "fumble_recovery_1_player_name",
+    "fumble_recovery_2_team",
+    "fumble_recovery_2_player_name",
+    "special_teams_play",
+]
+
+available_columns = [
+    column for column in columns_to_show
+    if column in week7.columns
+]
+
+# ============================================================
+# 4. DISPLAY ALL FRED WARNER PLAYS
+# ============================================================
+
+print("\n" + "=" * 80)
+print("ALL WEEK 7 PLAYS MENTIONING FRED WARNER")
+print("=" * 80)
+
+if warner_plays.empty:
+    print("No plays mentioning Fred Warner were found.")
+else:
+    print(
+        warner_plays[available_columns]
+        .to_string(index=False)
+    )
+
+# ============================================================
+# 5. FIND ALL FORCED FUMBLES IN WEEK 7
+# ============================================================
+
+print("\n" + "=" * 80)
+print("ALL WEEK 7 FORCED FUMBLE EVENTS")
+print("=" * 80)
+
+forced_fumbles = week7[
+    week7["fumble_forced"].fillna(0).eq(1)
+].copy()
+
+print(f"Total forced-fumble plays: {len(forced_fumbles)}")
+
+if forced_fumbles.empty:
+    print("No forced fumbles found.")
+else:
+    print(
+        forced_fumbles[available_columns]
+        .to_string(index=False)
+    )
+
+# ============================================================
+# 6. SEARCH FOR FRED WARNER IN FORCED-FUMBLE CREDIT FIELDS
+# ============================================================
+
+print("\n" + "=" * 80)
+print("FORCED FUMBLES SPECIFICALLY CREDITED TO FRED WARNER")
+print("=" * 80)
+
+warner_forced_mask = pd.Series(
+    False,
+    index=forced_fumbles.index
+)
+
+for column in [
+    "forced_fumble_player_1_player_name",
+    "forced_fumble_player_2_player_name",
+]:
+    if column in forced_fumbles.columns:
+        warner_forced_mask |= (
+            forced_fumbles[column]
+            .astype(str)
+            .str.contains("Warner", case=False, na=False)
+        )
+
+warner_forced_fumbles = forced_fumbles[
+    warner_forced_mask
+].copy()
+
+print(
+    f"Forced fumbles credited to Fred Warner: "
+    f"{len(warner_forced_fumbles)}"
+)
+
+if warner_forced_fumbles.empty:
+    print("No forced-fumble credit for Fred Warner was found.")
+else:
+    print(
+        warner_forced_fumbles[available_columns]
+        .to_string(index=False)
+    )
+
+# ============================================================
+# 7. INSPECT SF VS ATL SPECIFICALLY
+# ============================================================
+
+print("\n" + "=" * 80)
+print("SAN FRANCISCO VS ATLANTA — WEEK 7")
+print("=" * 80)
+
+sf_atl = week7[
+    week7["game_id"] == TARGET_GAME
+].copy()
+
+print(f"Total plays in game: {len(sf_atl)}")
+
+sf_atl_forced = sf_atl[
+    sf_atl["fumble_forced"].fillna(0).eq(1)
+].copy()
+
+print("\nSF-ATL forced-fumble events:")
+
+if sf_atl_forced.empty:
+    print("No forced fumbles found.")
+else:
+    print(
+        sf_atl_forced[available_columns]
+        .to_string(index=False)
+    )
+
+# ============================================================
+# 8. SUMMARIZE FORCED FUMBLES BY TEAM
+# ============================================================
+
+print("\n" + "=" * 80)
+print("WEEK 7 FORCED FUMBLES BY CREDITED TEAM")
+print("=" * 80)
+
+if "forced_fumble_player_1_team" in forced_fumbles.columns:
+    print(
+        forced_fumbles.groupby(
+            "forced_fumble_player_1_team",
+            dropna=False
+        ).size().to_string()
+    )
+
+# ============================================================
+# 9. SAVE RESULTS
+# ============================================================
+
+warner_plays.to_csv(
+    "week7_fred_warner_plays.csv",
+    index=False
+)
+
+forced_fumbles.to_csv(
+    "week7_all_forced_fumbles.csv",
+    index=False
+)
+
+warner_forced_fumbles.to_csv(
+    "week7_fred_warner_forced_fumbles.csv",
+    index=False
+)
+
+sf_atl_forced.to_csv(
+    "week7_sf_atl_forced_fumbles.csv",
+    index=False
+)
+
+print("\n" + "=" * 80)
+print("FILES SAVED")
+print("=" * 80)
+
+print("1. week7_fred_warner_plays.csv")
+print("2. week7_all_forced_fumbles.csv")
+print("3. week7_fred_warner_forced_fumbles.csv")
+print("4. week7_sf_atl_forced_fumbles.csv")
+
+print("\nAudit complete.")

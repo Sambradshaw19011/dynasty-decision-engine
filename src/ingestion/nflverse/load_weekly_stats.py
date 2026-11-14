@@ -2,9 +2,16 @@
 """
 Load NFLverse weekly player statistics into Supabase.
 
-Usage:
+Routine refresh:
     python -m src.ingestion.nflverse.load_weekly_stats --preview
     python -m src.ingestion.nflverse.load_weekly_stats --load
+
+Historical backfill:
+    python -m src.ingestion.nflverse.load_weekly_stats --preview --backfill
+    python -m src.ingestion.nflverse.load_weekly_stats --load --backfill
+
+Optional:
+    --weeks 5
 
 Requires .env:
     SUPABASE_URL
@@ -37,9 +44,15 @@ load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 BATCH_SIZE = 100
 PAGE_SIZE = 1000
+
+# Preserve the project's existing historical load boundary.
 FIRST_SEASON_TO_LOAD = 2024
 
+# Routine refresh window: latest five available weeks.
+DEFAULT_WEEKS_TO_REFRESH = 5
+
 SOURCE_DATASET = "nflverse_player_stats"
+
 
 STAT_COLUMNS = {
     "completions", "attempts", "passing_yards", "passing_tds",
@@ -88,6 +101,7 @@ STAT_COLUMNS = {
     "punts", "punt_yards", "punt_avg", "punt_net_avg",
     "punts_inside_20", "punt_touchbacks",
 }
+
 
 REQUIRED_SOURCE_COLUMNS = {
     "player_id",
@@ -193,7 +207,9 @@ def make_row_hash(source_row):
         allow_nan=False,
     )
 
-    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    return hashlib.sha256(
+        serialized.encode("utf-8")
+    ).hexdigest()
 
 
 # --------------------------------------------------
@@ -260,14 +276,45 @@ def load_season_ids(client):
     return season_ids
 
 
+def load_current_season(client):
+    """Get the season marked as current in dim_season."""
+    response = (
+        client.table("dim_season")
+        .select("season_id")
+        .eq("is_current", True)
+        .execute()
+    )
+
+    rows = response.data or []
+
+    if len(rows) != 1:
+        raise ValueError(
+            "Expected exactly one current season in dim_season; "
+            f"found {len(rows)}."
+        )
+
+    season = int(rows[0]["season_id"])
+
+    print(f"Current NFL season: {season}")
+
+    return season
+
+
 # --------------------------------------------------
 # Source loading
 # --------------------------------------------------
 
-def load_source_stats():
-    print("\nDownloading NFLverse weekly player statistics...")
+def load_source_stats(seasons):
+    """Download only the requested NFL season or seasons."""
+    print(
+        "\nDownloading NFLverse weekly player statistics "
+        f"for seasons: {seasons}"
+    )
 
-    df = nfl.load_player_stats(seasons=True)
+    df = nfl.load_player_stats(
+        seasons=seasons,
+        summary_level="week",
+    )
 
     print(f"Source records retrieved: {df.height:,}")
 
@@ -279,6 +326,41 @@ def load_source_stats():
         )
 
     return df
+
+
+def filter_recent_weeks(source_df, weeks_to_refresh):
+    """
+    Retain the latest available weeks from the current season.
+
+    This refreshes recent records so late stat corrections
+    can be picked up by the hash comparison.
+    """
+    if source_df.height == 0:
+        print("\nNo source records returned for this season.")
+        return source_df
+
+    latest_week_value = source_df["week"].max()
+
+    if latest_week_value is None:
+        raise ValueError(
+            "NFLverse returned records, but no valid week was found."
+        )
+
+    latest_week = int(latest_week_value)
+    first_week = max(1, latest_week - weeks_to_refresh + 1)
+
+    filtered_df = source_df.filter(
+        source_df["week"] >= first_week
+    )
+
+    print("\nRECENT WEEK FILTER")
+    print("-" * 45)
+    print(f"Latest available week: {latest_week}")
+    print(f"First week included:   {first_week}")
+    print(f"Weeks included:        {latest_week - first_week + 1}")
+    print(f"Records retained:      {filtered_df.height:,}")
+
+    return filtered_df
 
 
 # --------------------------------------------------
@@ -458,26 +540,100 @@ def prepare_records(
 
 
 # --------------------------------------------------
+# Existing record comparison
+# --------------------------------------------------
+
+def fetch_existing_hashes(client, season_ids):
+    """
+    Retrieve existing natural keys and hashes for the seasons
+    currently being processed.
+    """
+    if not season_ids:
+        return {}
+
+    print("\nChecking existing database records...")
+
+    existing = {}
+    start = 0
+
+    while True:
+        response = (
+            client.table("fact_player_weekly_stats")
+            .select(
+                "source_player_id,game_id,season_type,source_row_hash"
+            )
+            .in_("season_id", season_ids)
+            .range(start, start + PAGE_SIZE - 1)
+            .execute()
+        )
+
+        batch = response.data or []
+
+        for row in batch:
+            key = (
+                row["source_player_id"],
+                row["game_id"],
+                row["season_type"],
+            )
+
+            existing[key] = row.get("source_row_hash")
+
+        if len(batch) < PAGE_SIZE:
+            break
+
+        start += PAGE_SIZE
+
+    print(f"Existing records retrieved: {len(existing):,}")
+
+    return existing
+
+
+def compare_records(records, existing_hashes):
+    """Separate records into inserts, updates, and unchanged rows."""
+    new_records = []
+    updated_records = []
+    unchanged_count = 0
+
+    for record in records:
+        key = (
+            record["source_player_id"],
+            record["game_id"],
+            record["season_type"],
+        )
+
+        old_hash = existing_hashes.get(key)
+
+        if key not in existing_hashes:
+            new_records.append(record)
+
+        elif old_hash != record["source_row_hash"]:
+            updated_records.append(record)
+
+        else:
+            unchanged_count += 1
+
+    return new_records, updated_records, unchanged_count
+
+
+# --------------------------------------------------
 # Incremental database loading
 # --------------------------------------------------
 
-def insert_new_records(client, records):
+def sync_weekly_records(client, records):
     """
-    Insert records without updating existing rows.
+    Insert new records and update changed records.
 
-    The unique natural-key index prevents duplicates.
-    Existing rows are ignored rather than rewritten.
+    Existing records are compared by source_row_hash.
+    Unchanged records are not rewritten.
     """
+    if not records:
+        print("\nNo new or changed records to write.")
+        return 0
 
     total = len(records)
-
-    if total == 0:
-        print("\nNo records to insert.")
-        return
-
-    print(f"\nProcessing {total:,} records...")
-
     batches_processed = 0
+
+    print(f"\nWriting {total:,} new or changed records...")
 
     for start in range(0, total, BATCH_SIZE):
         batch = records[start:start + BATCH_SIZE]
@@ -487,7 +643,7 @@ def insert_new_records(client, records):
             .upsert(
                 batch,
                 on_conflict="source_player_id,game_id,season_type",
-                ignore_duplicates=True,
+                ignore_duplicates=False,
             )
             .execute()
         )
@@ -497,11 +653,13 @@ def insert_new_records(client, records):
         completed = min(start + len(batch), total)
 
         print(
-            f"Processed {completed:,} / {total:,} "
+            f"Written {completed:,} / {total:,} "
             f"records ({completed / total:.1%})"
         )
 
     print(f"\nCompleted {batches_processed:,} batches.")
+
+    return total
 
 
 # --------------------------------------------------
@@ -517,10 +675,31 @@ def main():
     mode.add_argument("--preview", action="store_true")
     mode.add_argument("--load", action="store_true")
 
+    parser.add_argument(
+        "--backfill",
+        action="store_true",
+        help="Load the configured historical seasons instead of recent weeks.",
+    )
+
+    parser.add_argument(
+        "--weeks",
+        type=int,
+        default=DEFAULT_WEEKS_TO_REFRESH,
+        help="Number of latest available weeks to refresh. Default: 5.",
+    )
+
     args = parser.parse_args()
+
+    if args.weeks < 1:
+        parser.error("--weeks must be at least 1.")
 
     print("\nNFLVERSE WEEKLY PLAYER STATS PIPELINE")
     print("=" * 55)
+
+    if args.backfill:
+        print("MODE: HISTORICAL BACKFILL")
+    else:
+        print("MODE: RECENT SEASON REFRESH")
 
     client = get_supabase_client()
 
@@ -528,10 +707,43 @@ def main():
     player_mapping = load_player_mapping(client)
     valid_game_ids = load_game_ids(client)
     valid_season_ids = load_season_ids(client)
+    current_season = load_current_season(client)
 
-    # Load and normalize source statistics.
-    source_df = load_source_stats()
+    # Choose the source download scope.
+    if args.backfill:
+        seasons_to_load = sorted(
+            season
+            for season in valid_season_ids
+            if season >= FIRST_SEASON_TO_LOAD
+        )
 
+        if not seasons_to_load:
+            raise ValueError(
+                "No valid seasons found for the historical backfill."
+            )
+
+        print(f"Backfill seasons: {seasons_to_load}")
+
+    else:
+        if current_season not in valid_season_ids:
+            raise ValueError(
+                f"Current season {current_season} is not in valid seasons."
+            )
+
+        seasons_to_load = current_season
+        print(f"Current season selected: {current_season}")
+
+    # Download only the selected seasons.
+    source_df = load_source_stats(seasons_to_load)
+
+    # Routine refresh: keep only recent weeks.
+    if not args.backfill:
+        source_df = filter_recent_weeks(
+            source_df,
+            args.weeks,
+        )
+
+    # Normalize and validate source records.
     (
         records,
         null_count,
@@ -544,28 +756,55 @@ def main():
         valid_season_ids,
     )
 
+    # Preserve the existing historical boundary during backfill.
+    if args.backfill:
+        records_to_process = [
+            record
+            for record in records
+            if (
+                record["season_id"] > FIRST_SEASON_TO_LOAD
+                or (
+                    record["season_id"] == FIRST_SEASON_TO_LOAD
+                    and record["season_type"] == "POST"
+                )
+            )
+        ]
+    else:
+        records_to_process = records
+
     matched_count = sum(
-        1 for row in records
+        1
+        for row in records_to_process
         if row["player_id"] is not None
     )
 
-    # Filter to the seasons that need additional records.
-    records_to_load = [
-    record
-    for record in records
-    if (
-        record["season_id"] > 2024
-        or (
-            record["season_id"] == 2024
-            and record["season_type"] == "POST"
-        )
+    seasons_in_records = sorted({
+        record["season_id"]
+        for record in records_to_process
+    })
+
+    # Compare source hashes with existing database rows.
+    existing_hashes = fetch_existing_hashes(
+        client,
+        seasons_in_records,
     )
-]
+
+    new_records, updated_records, unchanged_count = compare_records(
+        records_to_process,
+        existing_hashes,
+    )
+
+    records_to_write = new_records + updated_records
+
+    # --------------------------------------------------
+    # Validation summary
+    # --------------------------------------------------
 
     print("\nVALIDATION SUMMARY")
     print("=" * 55)
-    print(f"Source records:            {source_df.height:,}")
+    print(f"Source records downloaded: {source_df.height:,}")
     print(f"Prepared records:          {len(records):,}")
+    print(f"Records in scope:          {len(records_to_process):,}")
     print(f"Excluded null IDs:         {null_count:,}")
     print(f"Excluded zero IDs:         {zero_count:,}")
     print(f"Matched players:           {matched_count:,}")
@@ -574,10 +813,17 @@ def main():
     print(f"Valid seasons:             {len(valid_season_ids):,}")
     print(f"Batch size:                {BATCH_SIZE:,}")
 
-    print("\nINCREMENTAL LOAD SUMMARY")
+    print("\nINCREMENTAL SYNC SUMMARY")
     print("=" * 55)
-    print(f"First season to load:      {FIRST_SEASON_TO_LOAD}")
-    print(f"Records from 2024 onward:  {len(records_to_load):,}")
+    print(f"New records:               {len(new_records):,}")
+    print(f"Changed records:           {len(updated_records):,}")
+    print(f"Unchanged records:         {unchanged_count:,}")
+    print(f"Total records to write:    {len(records_to_write):,}")
+
+    if args.backfill:
+        print(f"Historical boundary:       {FIRST_SEASON_TO_LOAD} POST onward")
+    else:
+        print(f"Weeks requested:           {args.weeks}")
 
     if unmatched_players:
         print("\nUnmatched player ID samples:")
@@ -585,10 +831,14 @@ def main():
         for player_id in sorted(unmatched_players)[:20]:
             print(f"  {player_id}")
 
+    # --------------------------------------------------
+    # Preview
+    # --------------------------------------------------
+
     if args.preview:
         print("\nPREVIEW SAMPLE")
 
-        for record in records_to_load[:3]:
+        for record in records_to_write[:3]:
             print(record)
 
         print("\nPREVIEW COMPLETE")
@@ -596,22 +846,32 @@ def main():
 
         return 0
 
-    print("\nLoading weekly player statistics...")
+    # --------------------------------------------------
+    # Load
+    # --------------------------------------------------
 
-    insert_new_records(client, records_to_load)
+    print("\nLoading new and changed weekly player statistics...")
+
+    written_count = sync_weekly_records(
+        client,
+        records_to_write,
+    )
 
     print("\nWEEKLY STATS PIPELINE COMPLETE")
     print("=" * 55)
-    print(f"Source records prepared:   {len(records):,}")
-    print(f"Records processed:         {len(records_to_load):,}")
-    print(f"Records before 2024:       {len(records) - len(records_to_load):,}")
+    print(f"Source records downloaded: {source_df.height:,}")
+    print(f"Records in scope:          {len(records_to_process):,}")
+    print(f"New records:               {len(new_records):,}")
+    print(f"Updated records:           {len(updated_records):,}")
+    print(f"Unchanged records:         {unchanged_count:,}")
+    print(f"Records written:           {written_count:,}")
     print(f"Matched players:           {matched_count:,}")
     print(f"Unmatched player IDs:      {len(unmatched_players):,}")
     print(f"Excluded source rows:      {null_count + zero_count:,}")
 
     print(
-        "\nNote: Existing records were ignored by the unique index. "
-        "The processed count is not the number of newly inserted rows."
+        "\nExisting records were updated only when their "
+        "NFLverse source hash changed."
     )
 
     return 0

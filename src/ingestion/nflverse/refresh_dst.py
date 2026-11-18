@@ -5,12 +5,19 @@ and GitHub secrets documented in docs/weekly-dst-refresh.md.
 """
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 import os
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 import nflreadpy as nfl
+import pyarrow as pa
+import pyarrow.parquet as pq
 import requests
+from src.ingestion.nflverse.load_play_by_play import COLUMN_MAP, INTEGER_COLUMNS, clean, integer_or_none
 from supabase import create_client
 
 BUCKET = "nflverse-data"
@@ -38,11 +45,64 @@ def all_rows(client, table, columns, filters=None):
         start += PAGE
 
 
+
+def build_compatible_parquet(frame, existing_bytes, destination):
+    """Reproduce the historical PostgreSQL-export schema without database writes."""
+    import io
+    historical_schema = pq.read_schema(io.BytesIO(existing_bytes))
+    required_source = set(COLUMN_MAP)
+    missing_source = sorted(required_source - set(frame.columns))
+    if missing_source:
+        raise RuntimeError(f"NFLverse missing mapped source fields: {missing_source}")
+    expected_fields = set(COLUMN_MAP.values()) | {
+        "raw_play_data", "source_retrieved_at", "updated_at"
+    }
+    if set(historical_schema.names) != expected_fields:
+        raise RuntimeError(
+            f"Stored schema differs from loader: "
+            f"missing={sorted(expected_fields - set(historical_schema.names))}, "
+            f"extra={sorted(set(historical_schema.names) - expected_fields)}"
+        )
+    if frame.select("game_id").null_count().item() or frame.select("play_id").null_count().item():
+        raise RuntimeError("Null play identifiers")
+    if frame.select(["game_id", "play_id"]).unique().height != frame.height:
+        raise RuntimeError("Duplicate game_id/play_id keys")
+    retrieved_at = datetime.now(timezone.utc)
+    writer = pq.ParquetWriter(destination, historical_schema, compression="zstd")
+    written = 0
+    try:
+        for offset in range(0, frame.height, 1000):
+            records = []
+            for row in frame.slice(offset, 1000).to_dicts():
+                raw = {name: clean(value) for name, value in row.items()}
+                item = {target: raw[source] for source, target in COLUMN_MAP.items()}
+                for column in INTEGER_COLUMNS:
+                    item[column] = integer_or_none(item[column], column)
+                item["raw_play_data"] = json.dumps(raw, ensure_ascii=False, separators=(",", ":"), default=str)
+                item["source_retrieved_at"] = retrieved_at
+                item["updated_at"] = retrieved_at
+                records.append(item)
+            batch = pa.Table.from_pylist(records, schema=historical_schema)
+            writer.write_table(batch)
+            written += batch.num_rows
+    finally:
+        writer.close()
+    output = pq.ParquetFile(destination)
+    if written != frame.height or output.metadata.num_rows != frame.height:
+        raise RuntimeError("Parquet row count mismatch")
+    if not output.schema_arrow.equals(historical_schema, check_metadata=False):
+        raise RuntimeError("Parquet schema mismatch")
+    print(f"Verified {written:,} plays; {len(historical_schema.names)} historical columns", flush=True)
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
+    args = parser.parse_args()
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
-    secret = required("PBP_INSPECT_SECRET")
-    settings_id = required("DST_SCORING_SETTINGS_ID")
+    secret = required("PBP_INSPECT_SECRET") if args.execute else None
+    settings_id = required("DST_SCORING_SETTINGS_ID") if args.execute else None
     client = create_client(url, key)
 
     seasons = all_rows(client, "dim_season", "season_id", {"is_current": True})
@@ -72,10 +132,15 @@ def main():
     object_path = f"play_by_play/{season}.parquet"
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / f"{season}.parquet"
-        frame.write_parquet(str(path), compression="zstd")
+        existing = client.storage.from_(BUCKET).download(object_path)
+        build_compatible_parquet(frame, existing, path)
         data = path.read_bytes()
         if len(data) < 1000:
             raise RuntimeError("Unexpectedly small PBP file")
+
+        if not args.execute:
+            print(f"DRY RUN PASS: compatible {object_path}; no storage, event, or score changes", flush=True)
+            return
 
         # Upsert only after full-source validation; existing data remains if validation fails.
         endpoint = f"{url}/storage/v1/object/{BUCKET}/{object_path}"

@@ -1,0 +1,83 @@
+"""D/ST refresh journal orchestration primitives.
+
+No production writes occur on import. The production refresh must call begin()
+only after verified, durable backups exist. This module never marks an operation
+completed without an explicit caller verification step.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Callable
+
+STAGES = ("prepared", "promoting", "importing", "scoring", "verifying", "completed")
+RECOVERABLE = frozenset(STAGES[:-1]) | {"recovery_failed"}
+
+
+@dataclass
+class RefreshJournal:
+    client: object
+    operation_id: str
+    status: str = "prepared"
+
+    @classmethod
+    def begin(cls, client, *, season: int, backup_parquet_path: str,
+              backup_parquet_sha256: str, backup_database_sha256: str,
+              staged_parquet_path: str, staged_parquet_sha256: str):
+        params = {
+            "p_season": season,
+            "p_backup_parquet_path": backup_parquet_path,
+            "p_backup_parquet_sha256": backup_parquet_sha256,
+            "p_backup_database_sha256": backup_database_sha256,
+            "p_staged_parquet_path": staged_parquet_path,
+            "p_staged_parquet_sha256": staged_parquet_sha256,
+        }
+        operation_id = client.rpc("start_dst_refresh_operation", params).execute().data
+        if not isinstance(operation_id, str) or not operation_id:
+            raise RuntimeError("D/ST refresh journal start not confirmed")
+        return cls(client, operation_id)
+
+    def advance(self, next_status: str, details: dict | None = None):
+        if self.status not in STAGES or next_status not in STAGES:
+            raise RuntimeError("Invalid forward journal transition")
+        if STAGES.index(next_status) != STAGES.index(self.status) + 1:
+            raise RuntimeError(f"Cannot advance from {self.status} to {next_status}")
+        result = self.client.rpc("advance_dst_refresh_operation", {
+            "p_operation_id": self.operation_id,
+            "p_expected_status": self.status,
+            "p_next_status": next_status,
+            "p_details": details or {},
+        }).execute().data
+        if not isinstance(result, dict) or result.get("status") != next_status:
+            raise RuntimeError(f"Journal did not confirm {next_status}")
+        self.status = next_status
+
+    def run(self, *, promote: Callable, import_events: Callable,
+            score: Callable, verify: Callable, recover: Callable):
+        """Execute stages; never swallow failed recovery.
+
+        recover(operation_id) must restore both database and Parquet, verify
+        them, and mark the journal recovered. An interruption before recovery
+        leaves a journal entry for later inspection.
+        """
+        try:
+            for status, action in (
+                ("promoting", promote),
+                ("importing", import_events),
+                ("scoring", score),
+                ("verifying", verify),
+            ):
+                self.advance(status)
+                action()
+            self.advance("completed")
+        except Exception as original:
+            try:
+                recover(self.operation_id)
+            except Exception as recovery_error:
+                raise RuntimeError(
+                    f"Refresh failed at {self.status}; recovery also failed. "
+                    f"Operation {self.operation_id} requires intervention."
+                ) from recovery_error
+            raise RuntimeError(
+                f"Refresh failed at {self.status}; recovery completed. "
+                f"Operation {self.operation_id}."
+            ) from original

@@ -16,7 +16,6 @@ from supabase import create_client
 
 from src.ingestion.nflverse.refresh_dst import BUCKET, required
 from src.ingestion.nflverse.restore_dst_snapshot import count_rows, TABLES, CONFIRM
-from src.ingestion.nflverse.verify_dst_snapshot import verify_snapshot
 from src.ingestion.nflverse.dst_durable_backup import verify_remote_snapshot
 
 RECOVER_CONFIRM = "RECOVER_INTERRUPTED_DST_REFRESH"
@@ -80,6 +79,8 @@ def main():
     current_digest = sha256(production)
     if current_digest not in (op["backup_parquet_sha256"], op["staged_parquet_sha256"]):
         raise RuntimeError("Production Parquet differs from both recorded versions; manual investigation required")
+    # Preflight checks ensure the snapshot can be restored safely.
+    # The actual restore RPC verifies every row within its transaction.
     counts = {table: count_rows(client, table, season) for table in TABLES}
     print(json.dumps({
         "operation_id": args.operation_id, "status": op["status"],

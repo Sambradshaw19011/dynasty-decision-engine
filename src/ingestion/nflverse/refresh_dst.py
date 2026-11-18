@@ -443,6 +443,14 @@ def main():
                 print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
 
+    # Safety gate: the legacy production path is not transactional across Storage
+    # and Postgres. Do not enable until the recovery coordinator is integrated.
+    raise RuntimeError(
+        "Production promotion disabled: atomic DB restore and Parquet recovery "
+        "are verified separately but not yet coordinated for crash-safe execution. "
+        "Use --audit-staging, --verify-backup, --verify-recovery, or --snapshot-db."
+    )
+
         # Production promotion is explicitly gated by a verified staging audit.
         # Preserve the original production bytes in immutable content-addressed
         # backup storage before changing the production object.

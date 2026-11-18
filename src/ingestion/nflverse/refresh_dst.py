@@ -238,9 +238,10 @@ def main():
     parser.add_argument('--stage', action='store_true', help='Upload generated Parquet to staging only; no import or scoring')
     parser.add_argument('--audit-staging', action='store_true', help='Stage and audit generated Parquet using the deployed Edge Function')
     parser.add_argument('--verify-backup', action='store_true', help='Verify immutable backup of current production Parquet; do not promote or score')
+    parser.add_argument('--verify-recovery', action='store_true', help='Simulate restoring verified production backup to an isolated staging object; no production writes')
     args = parser.parse_args()
-    if sum((args.stage, args.audit_staging, args.verify_backup, args.execute)) > 1:
-        parser.error('Choose only one of --stage, --audit-staging, --verify-backup, or --execute')
+    if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.execute)) > 1:
+        parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, or --execute')
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
@@ -278,7 +279,7 @@ def main():
         existing = client.storage.from_(BUCKET).download(object_path)
         build_compatible_parquet(frame, existing, path)
         compare_fumble_inputs(existing, path)
-        if args.verify_backup:
+        if args.verify_backup or args.verify_recovery:
             original_digest = hashlib.sha256(existing).hexdigest()
             backup_path = f"play_by_play_backups/{season}/{original_digest}.parquet"
             backup_url = f"{url}/storage/v1/object/{BUCKET}/{backup_path}"
@@ -296,6 +297,21 @@ def main():
                 raise RuntimeError("Production backup checksum mismatch")
             print(f"BACKUP VERIFIED: {BUCKET}/{backup_path}", flush=True)
             print(f"SHA256: {original_digest}", flush=True)
+            if args.verify_recovery:
+                # Exercise the recovery upload using an isolated object, not the
+                # production path. Verify byte-for-byte integrity after upload.
+                recovery_path = f"play_by_play_recovery_tests/{season}/{original_digest}.parquet"
+                recovery_response = requests.post(
+                    f"{url}/storage/v1/object/{BUCKET}/{recovery_path}",
+                    headers=backup_headers, data=backup_bytes, timeout=600,
+                )
+                if recovery_response.status_code != 409:
+                    recovery_response.raise_for_status()
+                restored = client.storage.from_(BUCKET).download(recovery_path)
+                if hashlib.sha256(restored).hexdigest() != original_digest:
+                    raise RuntimeError("Isolated recovery checksum mismatch")
+                print(f"RECOVERY DRILL PASS: {BUCKET}/{recovery_path}", flush=True)
+                print("Recovery source verified and isolated restore bytes match production backup", flush=True)
             print("No production Parquet, fumble events, or D/ST scores changed", flush=True)
             return
         data = path.read_bytes()

@@ -17,9 +17,10 @@ from supabase import create_client
 from src.ingestion.nflverse.refresh_dst import BUCKET, required
 from src.ingestion.nflverse.restore_dst_snapshot import count_rows, TABLES, CONFIRM
 from src.ingestion.nflverse.verify_dst_snapshot import verify_snapshot
+from src.ingestion.nflverse.dst_durable_backup import verify_remote_snapshot
 
 RECOVER_CONFIRM = "RECOVER_INTERRUPTED_DST_REFRESH"
-ACTIVE = {"prepared", "promoting", "importing", "scoring", "verifying", "recovery_failed"}
+ACTIVE = {"prepared", "promoting", "importing", "scoring", "verifying", "recovery_failed", "recovering"}
 ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -61,12 +62,26 @@ def main():
         raise RuntimeError("Unexpected immutable Parquet backup path")
     if op["staged_parquet_path"] != f"play_by_play_staging/{season}/{op['staged_parquet_sha256']}.parquet":
         raise RuntimeError("Unexpected staged Parquet path")
-    snapshot_path = ROOT / "backups" / "dst_database" / str(season) / (
-        op["backup_database_sha256"] + ".json"
+    backup_db_path = op.get("backup_database_path")
+    if not backup_db_path:
+        raise RuntimeError("Operation has no durable database backup path; automatic recovery refused")
+    snapshot = verify_remote_snapshot(
+        client, bucket=BUCKET, season=season, object_path=backup_db_path,
+        digest=op["backup_database_sha256"],
     )
-    snapshot = verify_snapshot(snapshot_path)
-    if snapshot["season"] != season:
-        raise RuntimeError("Snapshot season does not match operation")
+    # Also enforce the structural invariants of a local verified snapshot.
+    from src.ingestion.nflverse.verify_dst_snapshot import TABLE_KEYS, NATURAL_KEYS
+    if set(snapshot.get("tables", {})) != set(TABLE_KEYS):
+        raise RuntimeError("Remote snapshot table set invalid")
+    for name in TABLE_KEYS:
+        table = snapshot["tables"][name]
+        rows = table.get("rows")
+        if table.get("season_column") != "season_id" or not isinstance(rows, list) or not rows or len(rows) != table.get("row_count"):
+            raise RuntimeError(f"Remote snapshot table invalid: {name}")
+        for columns in (TABLE_KEYS[name], NATURAL_KEYS[name]):
+            keys = [tuple(row.get(col) for col in columns) for row in rows]
+            if any(row.get("season_id") != season for row in rows) or any(None in key for key in keys) or len(set(keys)) != len(keys):
+                raise RuntimeError(f"Remote snapshot keys invalid: {name}")
     backup = client.storage.from_(BUCKET).download(op["backup_parquet_path"])
     if sha256(backup) != op["backup_parquet_sha256"]:
         raise RuntimeError("Immutable Parquet backup checksum mismatch")
@@ -83,7 +98,7 @@ def main():
         "operation_id": args.operation_id, "status": op["status"],
         "season": season, "production_parquet_sha256": current_digest,
         "backup_parquet_sha256": op["backup_parquet_sha256"],
-        "snapshot_path": str(snapshot_path), "current_database_rows": counts,
+        "snapshot_path": backup_db_path, "current_database_rows": counts,
     }, indent=2), flush=True)
     if not args.execute:
         print("PREFLIGHT PASS: no production writes. Recovery requires --execute and confirmation.")
@@ -92,7 +107,8 @@ def main():
     # Recovery must be run only after the original worker has stopped. Journal
     # transition is compare-and-swap; concurrent nonparticipating writers are
     # NOT protected by this protocol.
-    advance(client, args.operation_id, op["status"], "recovering")
+    if op["status"] != "recovering":
+        advance(client, args.operation_id, op["status"], "recovering")
     try:
         # Restore database first. If it fails, production Parquet remains
         # untouched and the operation remains blocked for investigation.

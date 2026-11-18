@@ -412,10 +412,19 @@ def main():
             headers = {"apikey": key, "Authorization": f"Bearer {key}",
                        "Content-Type": "application/octet-stream", "x-upsert": "false"}
             response = requests.post(endpoint, headers=headers, data=data, timeout=600)
-            if response.status_code == 409:
+            if not response.ok:
+                try:
+                    error_text = str(response.json()).lower()
+                except ValueError:
+                    error_text = ""
+                duplicate = (
+                    response.status_code in (400, 409)
+                    and ("duplicate" in error_text or "already exists" in error_text
+                         or "resourcealreadyexists" in error_text)
+                )
+                if not duplicate:
+                    response.raise_for_status()
                 print("Staging object already exists; verifying bytes", flush=True)
-            else:
-                response.raise_for_status()
             uploaded = client.storage.from_(BUCKET).download(staging_path)
             if hashlib.sha256(uploaded).hexdigest() != digest:
                 raise RuntimeError("Staging Parquet checksum mismatch")

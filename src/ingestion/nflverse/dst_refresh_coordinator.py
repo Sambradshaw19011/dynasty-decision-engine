@@ -22,7 +22,7 @@ class RefreshJournal:
     @classmethod
     def begin(cls, client, *, season: int, backup_parquet_path: str,
               backup_parquet_sha256: str, backup_database_sha256: str,
-              staged_parquet_path: str, staged_parquet_sha256: str):
+              staged_parquet_path: str, staged_parquet_sha256: str,\n              backup_database_path: str | None = None):
         params = {
             "p_season": season,
             "p_backup_parquet_path": backup_parquet_path,
@@ -31,7 +31,12 @@ class RefreshJournal:
             "p_staged_parquet_path": staged_parquet_path,
             "p_staged_parquet_sha256": staged_parquet_sha256,
         }
-        operation_id = client.rpc("start_dst_refresh_operation", params).execute().data
+        if backup_database_path is not None:
+            params["p_backup_database_path"] = backup_database_path
+        operation_id = client.rpc(
+            "start_dst_refresh_operation_v2" if backup_database_path else "start_dst_refresh_operation",
+            params,
+        ).execute().data
         if not isinstance(operation_id, str) or not operation_id:
             raise RuntimeError("D/ST refresh journal start not confirmed")
         return cls(client, operation_id)

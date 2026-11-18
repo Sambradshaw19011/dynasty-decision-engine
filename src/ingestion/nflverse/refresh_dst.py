@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -165,6 +166,23 @@ def compare_fumble_inputs(existing_bytes, generated_path):
         new_file.close()
     added, removed = set(new) - set(old), set(old) - set(new)
     changed = [key for key in old.keys() & new.keys() if old[key] != new[key]]
+    sensitive = re.compile(r"fumb|muff|recover|loose ball|safety|blocked|turnover", re.I)
+    description_only = []
+    blocking = []
+    for key in changed:
+        differing = {name for name in old[key] if old[key][name] != new[key][name]}
+        raw_old = old[key]["raw_fumble_fields"]
+        raw_new = new[key]["raw_fumble_fields"]
+        raw_diff = {name for name in RAW_FUMBLE_FIELDS if raw_old[name] != raw_new[name]}
+        if (
+            differing <= {"play_description", "raw_fumble_fields"}
+            and raw_diff <= {"desc"}
+            and not sensitive.search(str(old[key]["play_description"] or ""))
+            and not sensitive.search(str(new[key]["play_description"] or ""))
+        ):
+            description_only.append(key)
+        else:
+            blocking.append(key)
     print(
         f"FUMBLE INPUT COMPARISON: old={len(old):,} new={len(new):,} "
         f"added={len(added)} removed={len(removed)} changed={len(changed)}",
@@ -197,12 +215,13 @@ def compare_fumble_inputs(existing_bytes, generated_path):
         print(f"  Added {key}", flush=True)
     for key in sorted(removed)[:5]:
         print(f"  Removed {key}", flush=True)
-    if added or removed or changed:
+    print(f"Description-only non-fumble updates: {len(description_only)}; blocking changes: {len(blocking)}", flush=True)
+    if added or removed or blocking:
         raise RuntimeError(
             "Fumble inputs differ; review changes before uploading. "
             "This does not necessarily indicate an error."
         )
-    print("FUMBLE INPUT COMPARISON PASS: all compared fields match", flush=True)
+    print("FUMBLE INPUT COMPARISON PASS: no blocking fumble input changes", flush=True)
 
 
 def main():

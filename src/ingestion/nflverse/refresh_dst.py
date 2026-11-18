@@ -18,6 +18,7 @@ import nflreadpy as nfl
 import pyarrow as pa
 import pyarrow.parquet as pq
 import requests
+from dotenv import load_dotenv
 from src.ingestion.nflverse.load_play_by_play import COLUMN_MAP, INTEGER_COLUMNS, clean, integer_or_none
 from supabase import create_client
 
@@ -239,6 +240,7 @@ def main():
     args = parser.parse_args()
     if sum((args.stage, args.audit_staging, args.execute)) > 1:
         parser.error('--stage, --audit-staging, and --execute are mutually exclusive')
+    load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
     secret = required("PBP_INSPECT_SECRET") if (args.execute or args.audit_staging) else None

@@ -95,6 +95,94 @@ def build_compatible_parquet(frame, existing_bytes, destination):
     print(f"Verified {written:,} plays; {len(historical_schema.names)} historical columns", flush=True)
 
 
+
+FUMBLE_FIELDS = (
+    "game_id", "play_id", "season", "week", "season_type",
+    "posteam", "defteam", "play_type", "play_description",
+    "fumble", "fumble_forced", "fumble_lost", "safety",
+    "forced_fumble_player_1_team", "forced_fumble_player_1_id",
+    "fumble_recovery_1_team", "fumble_recovery_1_player_id",
+    "fumble_recovery_2_team", "fumble_recovery_2_player_id",
+    "special_teams_play", "st_play_type", "punt_attempt",
+    "kickoff_attempt", "punt_blocked", "return_touchdown",
+    "touchdown", "td_team", "play_deleted", "penalty",
+)
+RAW_FUMBLE_FIELDS = (
+    "fumbled_1_player_id", "fumbled_1_team", "fumbled_2_player_id",
+    "fumbled_2_team", "fumble_recovery_1_team", "fumble_recovery_2_team",
+    "fumble_recovery_1_player_id", "fumble_recovery_2_player_id",
+    "forced_fumble_player_1_player_id", "forced_fumble_player_1_team",
+    "forced_fumble_player_2_player_id", "forced_fumble_player_2_team",
+    "fumble_not_forced", "fumble_out_of_bounds", "lateral_recovery",
+    "play_type_nfl", "desc", "st_play_type", "special_teams_play",
+    "fumble", "fumble_forced", "fumble_lost", "safety", "play_deleted",
+)
+
+
+def compare_fumble_inputs(existing_bytes, generated_path):
+    """Read-only comparison of fumble classifier inputs by unique play key."""
+    import io
+
+    old_file = pq.ParquetFile(io.BytesIO(existing_bytes))
+    new_file = pq.ParquetFile(generated_path)
+    fields = list(FUMBLE_FIELDS) + ["raw_play_data"]
+    for label, parquet in (("existing", old_file), ("generated", new_file)):
+        missing = set(fields) - set(parquet.schema_arrow.names)
+        if missing:
+            raise RuntimeError(f"{label} Parquet missing comparison fields: {sorted(missing)}")
+
+    def normalize(value):
+        if value is None:
+            return None
+        if isinstance(value, float):
+            if value != value:
+                return None
+            if value == 0:
+                return 0
+        if isinstance(value, (dict, list)):
+            return json.dumps(value, sort_keys=True, default=str)
+        return value
+
+    def collect(parquet):
+        indexed = {}
+        for batch in parquet.iter_batches(batch_size=1000, columns=fields):
+            for row in batch.to_pylist():
+                key = (row["game_id"], row["play_id"])
+                if key in indexed:
+                    raise RuntimeError(f"Duplicate play key in comparison: {key}")
+                raw = json.loads(row.get("raw_play_data") or "{}")
+                relevant = {field: normalize(row.get(field)) for field in FUMBLE_FIELDS}
+                relevant["raw_fumble_fields"] = {
+                    field: normalize(raw.get(field)) for field in RAW_FUMBLE_FIELDS
+                }
+                indexed[key] = relevant
+        return indexed
+
+    old, new = collect(old_file), collect(new_file)
+    added, removed = set(new) - set(old), set(old) - set(new)
+    changed = [key for key in old.keys() & new.keys() if old[key] != new[key]]
+    print(
+        f"FUMBLE INPUT COMPARISON: old={len(old):,} new={len(new):,} "
+        f"added={len(added)} removed={len(removed)} changed={len(changed)}",
+        flush=True,
+    )
+    for key in sorted(changed)[:10]:
+        differences = [
+            field for field in old[key] if old[key][field] != new[key][field]
+        ]
+        print(f"  Changed {key}: {', '.join(differences)}", flush=True)
+    for key in sorted(added)[:5]:
+        print(f"  Added {key}", flush=True)
+    for key in sorted(removed)[:5]:
+        print(f"  Removed {key}", flush=True)
+    if added or removed or changed:
+        raise RuntimeError(
+            "Fumble inputs differ; review changes before uploading. "
+            "This does not necessarily indicate an error."
+        )
+    print("FUMBLE INPUT COMPARISON PASS: all compared fields match", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
@@ -134,6 +222,7 @@ def main():
         path = Path(tmp) / f"{season}.parquet"
         existing = client.storage.from_(BUCKET).download(object_path)
         build_compatible_parquet(frame, existing, path)
+        compare_fumble_inputs(existing, path)
         data = path.read_bytes()
         if len(data) < 1000:
             raise RuntimeError("Unexpectedly small PBP file")

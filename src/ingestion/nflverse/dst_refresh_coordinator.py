@@ -22,7 +22,8 @@ class RefreshJournal:
     @classmethod
     def begin(cls, client, *, season: int, backup_parquet_path: str,
               backup_parquet_sha256: str, backup_database_sha256: str,
-              staged_parquet_path: str, staged_parquet_sha256: str,\n              backup_database_path: str | None = None):
+              staged_parquet_path: str, staged_parquet_sha256: str,
+              backup_database_path: str | None = None):
         params = {
             "p_season": season,
             "p_backup_parquet_path": backup_parquet_path,

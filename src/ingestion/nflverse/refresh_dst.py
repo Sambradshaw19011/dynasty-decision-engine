@@ -240,7 +240,10 @@ def main():
     parser.add_argument('--verify-backup', action='store_true', help='Verify immutable backup of current production Parquet; do not promote or score')
     parser.add_argument('--verify-recovery', action='store_true', help='Simulate restoring verified production backup to an isolated staging object; no production writes')
     parser.add_argument('--snapshot-db', action='store_true', help='Export and verify current-season D/ST event and score rows locally; no database writes')
+    parser.add_argument('--backup-db-with-audit', action='store_true', help='With --audit-staging, create and verify an immutable database backup; no production scoring changes')
     args = parser.parse_args()
+    if args.backup_db_with_audit and not args.audit_staging:
+        parser.error('--backup-db-with-audit requires --audit-staging')
     if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.snapshot_db, args.execute)) > 1:
         parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, --snapshot-db, or --execute')
     if args.execute:
@@ -469,6 +472,27 @@ def main():
                         or report.get("unclassified_recoveries") != 0):
                     raise RuntimeError("Staging classifier audit did not pass")
                 print("STAGING CLASSIFIER AUDIT PASS: no production changes", flush=True)
+                if args.backup_db_with_audit:
+                    from src.ingestion.nflverse.backup_dst_database import create_snapshot
+                    from src.ingestion.nflverse.dst_durable_backup import (
+                        upload_snapshot, verify_remote_snapshot,
+                    )
+                    root = Path(__file__).resolve().parents[3]
+                    local = create_snapshot(
+                        client, season, root / "backups" / "dst_database" / str(season)
+                    )
+                    remote = upload_snapshot(
+                        client, url=url, key=key, bucket=BUCKET,
+                        snapshot_path=local["path"],
+                    )
+                    verify_remote_snapshot(
+                        client, bucket=BUCKET, season=season,
+                        object_path=remote["path"], digest=remote["sha256"],
+                    )
+                    print("STAGING + DURABLE DATABASE BACKUP PASS:",
+                          json.dumps(remote, sort_keys=True), flush=True)
+                    print("No production Parquet, events, or D/ST scores modified",
+                          flush=True)
             else:
                 print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return

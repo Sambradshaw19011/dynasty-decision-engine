@@ -245,8 +245,8 @@ def main():
         parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, --snapshot-db, or --execute')
     if args.execute:
         raise RuntimeError(
-            "Production --execute is disabled until database and Parquet recovery "
-            "are coordinated and crash-recovery tested. No production changes made."
+            "Production --execute remains disabled: coordinated recovery and "
+            "failure-injection testing are not complete. No production changes made."
         )
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
@@ -260,6 +260,22 @@ def main():
         raise RuntimeError(f"Expected one current season; found {len(seasons)}")
     season = int(seasons[0]["season_id"])
     print(f"Refreshing {season}", flush=True)
+    # Fail closed before any future production promotion if an earlier run
+    # was interrupted. This check is read-only and also runs in dry-run mode.
+    unfinished = (
+        client.table("dst_refresh_operations")
+        .select("operation_id,status,created_at")
+        .eq("season_id", season)
+        .not_.in_("status", ["recovered", "completed"])
+        .execute().data or []
+    )
+    if unfinished:
+        print("UNFINISHED D/ST REFRESH:", json.dumps(unfinished, indent=2), flush=True)
+        if args.execute:
+            raise RuntimeError("Unfinished D/ST operation: recovery required before promotion")
+        print("WARNING: production refresh is blocked pending recovery", flush=True)
+    else:
+        print("REFRESH JOURNAL CHECK PASS: no unfinished operations", flush=True)
     if args.snapshot_db:
         # The fumble event table must be configured explicitly; guessing its
         # name could silently omit the data we need to preserve.

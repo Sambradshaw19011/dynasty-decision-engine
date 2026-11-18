@@ -1,0 +1,178 @@
+{
+  "2005": {
+    "season": 2005,
+    "object_path": "play_by_play/2005.parquet",
+    "rows": 46823,
+    "columns": 46,
+    "bytes": 27992548,
+    "sha256": "c57786b2573da1178df34466f5da66759ad25c35319ecff743f02311401e670e"
+  },
+  "2006": {
+    "season": 2006,
+    "object_path": "play_by_play/2006.parquet",
+    "rows": 46299,
+    "columns": 46,
+    "bytes": 32628302,
+    "sha256": "79028ff88cc17c8dbac304cdabef553f513e5a6a5f4a1574bfa3feafa24d6fc6"
+  },
+  "2007": {
+    "season": 2007,
+    "object_path": "play_by_play/2007.parquet",
+    "rows": 46266,
+    "columns": 46,
+    "bytes": 32717306,
+    "sha256": "25b84b0cc5ae6a893e3c38eb9fbe54487e9f42c026f99570974e447fddcbe1c2"
+  },
+  "2008": {
+    "season": 2008,
+    "object_path": "play_by_play/2008.parquet",
+    "rows": 45917,
+    "columns": 46,
+    "bytes": 32731916,
+    "sha256": "80166524666870dffe01c105340122665354984d9586bb2901117557985954f7"
+  },
+  "2009": {
+    "season": 2009,
+    "object_path": "play_by_play/2009.parquet",
+    "rows": 46519,
+    "columns": 46,
+    "bytes": 33339513,
+    "sha256": "f6a8dca37b7a02eb2591a36a923001c0bb251fbdc80976d819ee9ae7d3b8b21d"
+  },
+  "2010": {
+    "season": 2010,
+    "object_path": "play_by_play/2010.parquet",
+    "rows": 46892,
+    "columns": 46,
+    "bytes": 33580748,
+    "sha256": "99e8cad4d9a38542a7cd8e81d2650c10f0375e35eeb37b5577dc2fa7a76a1781"
+  },
+  "2011": {
+    "season": 2011,
+    "object_path": "play_by_play/2011.parquet",
+    "rows": 47448,
+    "columns": 46,
+    "bytes": 33437199,
+    "sha256": "75fd1946e2a5bed3872a92d9fd6644b6901fce268377b515e719bf24e3009f71"
+  },
+  "2012": {
+    "season": 2012,
+    "object_path": "play_by_play/2012.parquet",
+    "rows": 47834,
+    "columns": 46,
+    "bytes": 33676498,
+    "sha256": "51b67ad12820766776fbc2cf95f3777667297f2f2cb9dccacbb5a1ed38ad827c"
+  },
+  "2013": {
+    "season": 2013,
+    "object_path": "play_by_play/2013.parquet",
+    "rows": 48158,
+    "columns": 46,
+    "bytes": 33968698,
+    "sha256": "8cdc7d7df62539345e6b838ce834c2f521b30540bbf0747be5cbed8599eb9310"
+  },
+  "2014": {
+    "season": 2014,
+    "object_path": "play_by_play/2014.parquet",
+    "rows": 47629,
+    "columns": 46,
+    "bytes": 33685948,
+    "sha256": "9c6228beab562cf2cd59ab57c940be4a816bac7bb46547cc3917d246da466a24"
+  },
+  "2015": {
+    "season": 2015,
+    "object_path": "play_by_play/2015.parquet",
+    "rows": 48122,
+    "columns": 46,
+    "bytes": 34034311,
+    "sha256": "46d8055db9fe9479064e9aa1efa47d0fab1e088c55dcb9dbfaace48e21ee7b1a"
+  },
+  "2016": {
+    "season": 2016,
+    "object_path": "play_by_play/2016.parquet",
+    "rows": 47651,
+    "columns": 46,
+    "bytes": 33684208,
+    "sha256": "69fa58dd69223c860a0791efaf221c94db3eaeac0e0aaddcd813beaf109a8d9d"
+  },
+  "2017": {
+    "season": 2017,
+    "object_path": "play_by_play/2017.parquet",
+    "rows": 47245,
+    "columns": 46,
+    "bytes": 33291228,
+    "sha256": "082f50221c1940a53e4dc561a1723b41a9568a1520a027d43848c404f4f4fcc0"
+  },
+  "2018": {
+    "season": 2018,
+    "object_path": "play_by_play/2018.parquet",
+    "rows": 47109,
+    "columns": 46,
+    "bytes": 33341227,
+    "sha256": "c787ed2f0c643083170d4c4f27ea3b84b03e05e61b2490705842e697b3832668"
+  },
+  "2019": {
+    "season": 2019,
+    "object_path": "play_by_play/2019.parquet",
+    "rows": 47260,
+    "columns": 46,
+    "bytes": 33408553,
+    "sha256": "0b10d2a7869eca647700f1b5fe402615cfe75b0d58de6dae188071a6a89b42fb"
+  },
+  "2020": {
+    "season": 2020,
+    "object_path": "play_by_play/2020.parquet",
+    "rows": 47705,
+    "columns": 46,
+    "bytes": 33588184,
+    "sha256": "40d354ed3445da78700d5a03bb3f8ae5c6204387b581995fb114123879c97ed0"
+  },
+  "2021": {
+    "season": 2021,
+    "object_path": "play_by_play/2021.parquet",
+    "rows": 49922,
+    "columns": 46,
+    "bytes": 35564960,
+    "sha256": "2a6c83cf5ae846a1d0c17bb94565d6bec73b187ef2cea93162553f987f60c3c1"
+  },
+  "2022": {
+    "season": 2022,
+    "object_path": "play_by_play/2022.parquet",
+    "rows": 49434,
+    "columns": 46,
+    "bytes": 35786927,
+    "sha256": "ec9eb382df69275568597eceb89674581c69894c15206efbc21e05a779b73498"
+  },
+  "2023": {
+    "season": 2023,
+    "object_path": "play_by_play/2023.parquet",
+    "rows": 49665,
+    "columns": 46,
+    "bytes": 35238680,
+    "sha256": "4486f9cd9b5849b2d8359d3aefcc011ccdaa4af25f8d470553d15d9889e28892"
+  },
+  "2024": {
+    "season": 2024,
+    "object_path": "play_by_play/2024.parquet",
+    "rows": 49492,
+    "columns": 46,
+    "bytes": 35042978,
+    "sha256": "aafb9df018a473cefeebbbb1501cdcbe547350d9f34bf80298e0d3e3902a8dac"
+  },
+  "2025": {
+    "season": 2025,
+    "object_path": "play_by_play/2025.parquet",
+    "rows": 48771,
+    "columns": 46,
+    "bytes": 34825704,
+    "sha256": "b7688a69bd402f608fd8f4751cee95b74ef7dcf2a89fc926335e48583bab6924"
+  },
+  "2026": {
+    "season": 2026,
+    "object_path": "play_by_play/2026.parquet",
+    "rows": 26246,
+    "columns": 46,
+    "bytes": 18816807,
+    "sha256": "b570ada4982c01adedefeba2266e6069ef71fafcc2a0bf375522652ba836c986"
+  }
+}

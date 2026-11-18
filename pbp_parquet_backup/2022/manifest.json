@@ -1,0 +1,131 @@
+{
+  "season": 2022,
+  "expected_rows": 49434,
+  "parts": [
+    {
+      "object": "play_by_play/season=2022/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "5e18885f95a164e1dd8657b976a605bfd0ebb63397b1fa61a0443dbd76a62959"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "cbc41d5e2ae258dddf584e0f1450eb7a104f68530ee198fa618687cf15f6bdef"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "d293f4482e498d41e00c033c7560a2c1c1276313d298fd5a53b53ad40cb1636e"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "ac19494b615bedf16b73b09330bbed8bff7f6c1bb2da8ac8a7bff161c80defec"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "5bb63814f9527f24303baf9184a6261dc34fe7f83ec9dbc5a519fc326097f295"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "5a813f2fa4505ecab8fc4c54e33a363313bf62fe60f75cf484b1ff4d4030dc27"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "be77023ce9ce03f81a8a9fd66a99218a58a982a70ed30095e207294262e56f85"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "ea24b85c05ff84ec2f3adbbed2e8c7bc38c6b8bf75eb5a31ad78dd6bcbe63373"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "4d8d766cb15d0fb5a63fd6b42a45c1e1d73e702efec52f82fbd2ad9df1e4d5b7"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "631ff0f162f8011a39b2969df67c79759fefeb0a5a2c4a59419353144f819624"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "db097b7f5fdbb06b2f0e446923b10cf442a47fcad80e2bcd2b82fae034f198e6"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "5aa9875b344e6d950bb60f41946571eb0fe60bd1cc4557ae1006bdb26337b448"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "f28ef4174c043fd9b9e3c89c4095bce1ba39ece21f61a23352779a27fc5b9b1e"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "6fb7302b9f3841caf96f6e929cfb49955b92c8e44b8e89080f4c84a12fbefd66"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "1bf60ad037d342b1f5d88d404e4c1d67416de88c0c61913330bddc4dfd5ce9c3"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "2e9062c58cb5e31e6a572362c722f6bde3b09dc01f6f749298cd790ebe15adc7"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "13039b2d6e5eb4a6bb799e5283cea0839805f845285fb3f58af28f40b800283f"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "43e11d60eb6fbd80dad809e97f6dad810e5645b96c90ead312c3d5913d8cf9a8"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "696ee91b051ef9e5213dd06800ebb11120ddc7089fd62c15a87b48ee4a168706"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "43dc5eafa59d464b3b5d9c64bb6fe09a719f065c5567395e17df2ffd623e3e56"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "cda46ed382e5c42bb7e02b1a93dd4967633e00f5033d7b8763192695f667a862"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "0e3eafdcccf71a7aae17880fceffa71e0be881d43958e8ec08df6a03e5d25522"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "5988ef2f8e686765f501a8f4cb6f71989e8b3cd09a879b6c90a70d8c1d878237"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0024.parquet",
+      "rows": 2000,
+      "sha256": "93523b7429705748a00327c6d010e935bfd1ef8658468f7383c4e54137b248ff"
+    },
+    {
+      "object": "play_by_play/season=2022/part-0025.parquet",
+      "rows": 1434,
+      "sha256": "218401c97cbd7f5e78a15dddd2f568c527995ca448d58d6c7b02604520b320df"
+    }
+  ]
+}

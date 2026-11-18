@@ -1,0 +1,126 @@
+{
+  "season": 2019,
+  "expected_rows": 47260,
+  "parts": [
+    {
+      "object": "play_by_play/season=2019/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "fcb883741c0c5ed1848fc28db0b5eb139de699cc450958590e72fda9366ba4b5"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "61152985d4168f53e927e18ca5df0cf7244464a6ac30e593c889e8ac23f929db"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "c032b56b0caa59bef8a954eda658ccd7448bf767162defd3f3694e99d710aa78"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "88262b9d00537557d26437a4753df4bd73d81b40042b5dc3a9862d6e8b2d34ff"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "a4f48320fb1a22cb3d9bdea0f793b97e3b1fa9da95715ace1a3cb2d2cbbf3b3e"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "c3272156e9ac227aa828a64825b8b81bdfd21b09737c23f7e530ca462a6666e6"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "739160392e194054a93976791a7f26bc32255ecf89602edf4784b401dd3ba643"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "ffd52ba96ee86172cf56c4d0b8b09c0190e52adcff37e06f551e2d124305cdac"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "4b0e468784491c958817ab0ca8b1fc6fb28cf4aba4711b3d2b749d353d62c875"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "b69c36c1121b253f21b607b7fcd1076db69c120b2836349f8b6811f027fe5fd7"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "58b3cd895efc1974b7e26630149c37052bdf5308ba1ea85194ae5d33236b51b8"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "bda35bb5845f9c329a8e023c8527d1be51cc635bb54760e0554e7dfcc9758c24"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "1a53ef0d96ef0748633081f5931f5599fd1854b00e97da8907898d3ca4366ca7"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "4fa731a4e8fb733c8c59d11179ac408397dd5e563679bf54404694175c20b9d9"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "4f0c7335a5f33a19ce56d62dee7c3543a8b1a65d863b3c1838468edbca08ee19"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "72bcaebf27dbef3c6eb6aba86d84c5aa5094d724a1b12865bd640bc11ff9162f"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "c13dcf6e55348624058cb5dfb2e8d2ec188217556805aec6f25a1e221a50e83d"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "8ff648c64e2940406bd7a15d8d4016f2f74ac1e64033c2b74f7beae131ecd205"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "36b3004b5598016b5175348e81b0762f255e0c653192d5b0142befdedc6fd331"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "f47c813d13ce99be52635369376f594844001f606dd3579802fc90986e2bc11c"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "b12b25ae8d755b7e766e50d1a5488dcf655c70944d4132e9bd11cf5bd7879e9f"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "25e5138e466ee4f6dc34876baa1ff4bc407a38518a88272105681c89d71a9745"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "4bcd4382568412907753836c6f6a30c7e0cfd56586de6f324210630660154900"
+    },
+    {
+      "object": "play_by_play/season=2019/part-0024.parquet",
+      "rows": 1260,
+      "sha256": "18eb55c7b7b12337a164ebff3cc745565c20195735e3b45c675c8627ae08cba8"
+    }
+  ]
+}

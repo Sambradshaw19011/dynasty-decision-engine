@@ -1,0 +1,10 @@
+{
+  "season": 2026,
+  "rows": 26246,
+  "columns": 46,
+  "sha256": "b570ada4982c01adedefeba2266e6069ef71fafcc2a0bf375522652ba836c986",
+  "file": "pbp_parquet_backup\\consolidated\\2026.parquet",
+  "source": "nflreadpy.load_pbp",
+  "retrieved_at_utc": "2026-11-17T20:31:38.381918+00:00",
+  "season_complete": false
+}

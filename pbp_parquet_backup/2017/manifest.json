@@ -1,0 +1,126 @@
+{
+  "season": 2017,
+  "expected_rows": 47245,
+  "parts": [
+    {
+      "object": "play_by_play/season=2017/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "b8fbc3a3334f72f44bed377a6f083a55a802a9900bd9ff0bbf1c40befa56df48"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "b1ae05be2e67927617e269b6c63b824b4c1f0c45774bcd37e3d2a45b8bf96353"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "2610bd0a9fdf6602a46089bf13cb1097608a4621d05e8a852284cfbe65e32136"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "12ac015794aedc46db0313907925d4fe1ca16f2bb9dfd188364f287ad8cda383"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "6994105901322fc5cdd2a4f6acbad85b8980392d496fe6bec71590868999cc81"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "93f7b6155cbcc53dcbf35e081b110ea37e296eeade56e2517b1fa16ad4a06e8b"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "e49f373a04774a0ff61742a1cbccbe29cffc37e7a870c4ea205e7279bc79c12c"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "37fdfb273996fef31067120813f0604237036050c4f8d7d1b4897ac85fabbe7b"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "d450bf7e176a551984d212343bdbcb97c03e2d3569f0a8f14b621c0968e65eb4"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "cb04f1a96b55be30068593930a07ead972f6d817a44c01319d9e1da17bf30096"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "c4a3c20dd4cdf99a742715e4a83db619fe22a815d5f0461f9dbc3941d14d1ea2"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "da2d69324ea79306b78462fdff407e843334221ce3f51ac192c2ad9a55d54eda"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "bebab5f52263f0636890425ab7430c2c99e25457e345bde7e49d4f7d382fa2dc"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "3210512427cfa076f9e30c84b116376ad84222a4af92050a21cfcc2cbb2ed827"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "91e3a85d327463f0e74d23227c98a553d140d0ac5946d83d41d51d15edcca083"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "04e5cfe91a0850c1fc4b19c1233b864d0a3b217542015cf5ec1eba334466da4a"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "9ff6d922d577754cfbd92e173e53098a84828ef33cd6e6ae19be68a4d5d14b2f"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "0c19fe120b8f0b8f80a2c55eff254bfc9b796ec10c22d7f6ef0b8620f5dade78"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "5604c9c0bdfc2297c262481cd81ccdd3fe5aea45e0325a5632fe2af0c99b5b10"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "55c7d0cd26cb5e689b766346c0a8487bb8527d41b47fbe4f91d11a6621248e52"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "a89f96340a40f6c70e50011255c1c5bfdb88685738e5dc3cb5b07ede0c830e75"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "995793d769b2a20b61bbfcd3a5b5afccd9cc7ca1c7f41b4c7455c924ff388677"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "8d49941898b4fe67f39314cc0b231519e443fe1b15d1b14eabb50ddf063c89be"
+    },
+    {
+      "object": "play_by_play/season=2017/part-0024.parquet",
+      "rows": 1245,
+      "sha256": "788c5fcc9bacf926fe35bc2310ec4819687f5a1fd600e3405501f69fbc6b9e47"
+    }
+  ]
+}

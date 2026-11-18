@@ -1,0 +1,126 @@
+{
+  "season": 2020,
+  "expected_rows": 47705,
+  "parts": [
+    {
+      "object": "play_by_play/season=2020/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "239fa211ee8d8a9c39630e943818e47a9592610d3644be2a9864d0e7f062fe3b"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "1ac4417e9405f4da0f5730fe43dd2e081767e835050635aaf29a9b6ad7d8d404"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "cfe3c719b587f3494003a4adf79197f1a8a648fe7db5fdedd4ea8da6020d7f56"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "3358f31af53c3338f0d0e220a5df3055a37d60d28df40e56ee32fc07d87fc6a9"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "87e58e346a80e7dfb715817264fe18535453c532e5bede431bede1c07b02f9b2"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "bd1a6ea8b260077799e393657635dc2e570911be5cfe779c05990705caba9274"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "a5b9729e606204b3994ceeeb04576ca797d3f8620b028d089f767f6378dd4a0a"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "89b55c4f9c6a1ef6f6024e0cb59c3f4b1aea588d9579833bfb12692c038ebdb1"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "3c45dc4b2d6b20a2985437e8d15fdfcd014d414886c2a730e29f633a0e66c4de"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "b1ce2201a289d652f7216de11bea0f1ee5b2dcef37f5300851183783ca3cc6d0"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "38dbe76dcc56d4686e6600ed528321aad805d0df6903e85732251d4067d94d65"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "a00d38c1cd2f8f919fb4b2875c1544635a7bd2d6c579ff744bd1ea2a1dd8b152"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "1bf1c6e3c18b542608ecab10be555c7184db239872cf5511d1fa7de550bd3e8f"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "4250d05c761f5e89d0efb762f53f28aeb23e1c8921b160dbd9a3e9436d17eff6"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "408e3e4a230c5e4ecccc336ba91a8c826b1033b619d098fdc46b1c614502f94d"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "79e72a81a65dab5b8493c09c3bf98b46cf00e345bbd0839c65ab3b2827e9811c"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "3da8b74b7f6601277568769ee7f580591d61ced6aed0a8aad60f604d006f6730"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "6438b3ec065bf61e44351403298cb97fa97559121b3ef2d21fb3e35cf78bbf24"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "1e259cec079c66e62fce4f94994bb33724680147f3bd4f9ab489b044c69b5d70"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "ebfa33aebe1752a0cf8c17639fa923ec3cc01dbbfbc47b3b1e101363f9033247"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "295546c171c69c72be5c756ee13de78a55481e9e2505ad8e3883c48f1373c41b"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "8b08d4abfc86c4f64acc5ca90af46c94bb02e4fbbb9585b967e2b92107fca3f1"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "a33efba6d18f0a40b30597cce159c68c52369d007f4dc838e753b2d83308ddb8"
+    },
+    {
+      "object": "play_by_play/season=2020/part-0024.parquet",
+      "rows": 1705,
+      "sha256": "07aa7e524e8d276649a6e99a26117cdc55ea42100902cb776d3de68b1258f6a5"
+    }
+  ]
+}

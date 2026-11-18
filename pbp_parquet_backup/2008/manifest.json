@@ -1,0 +1,121 @@
+{
+  "season": 2008,
+  "expected_rows": 45917,
+  "parts": [
+    {
+      "object": "play_by_play/season=2008/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "6969b5947ade2a6020f29f0df52f1a416b413d1b20a8d60eca98d2fb5cf93ae3"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "6993e46f594ef65f923cfced8e4ac4e934c09c5e601edd56f91ca704272b537a"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "e3dde1643ed8131138a66642149b406f425181262773177bde4e3a288d7960bd"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "0fdf2e2b7445a8fffaaadfc022fce8171ea191a25d470338ed43a2c7e765c34a"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "0a3741527b14e6dcee038e01ef874786d51c6cc5372e27f8347b995a622203a3"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "27cc5e8f494360a7ec6eeb7ad30087ad36760982a1e6d943811fa7c6d16abbda"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "112d7260e3db9d7b3fa5a160caeef107fcf490ea64879e2c23d1d2e7e603469b"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "8ce0aa5f1217b471c6587de5beb3075a9430a0ac0eb71c31d62ae20a1befabea"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "539ffe3c436d492cbb642461129d4331e258987e99787cf0ddf4f58f9c89e0ed"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "0e2976dcbaa455bd582c7c6bed135fef32fcaa6b14b9c9835176e9e75d6b7c1c"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "81e422a292195a9330e66ea4823c902028c15a4c3ada42ba85b669c26b26e356"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "569bbc2041cf5d8c9a9aba92f709c83aff9805e7955d5b77b4233d9b8b69ac60"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "3dd17efa873a0dcf31ec96d7ee9f4ee1d91699178dd94c70159cce0c58ee10e2"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "c198b62254573257b217fd0a1fa339de6d46f4ba8a2ac8e36c9e00ab14550692"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "34d3ad6f20ad69ad1b74a84578556ca7413db3d1e20583724662a078d20f583f"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "4586e38f74f89df3d400fdf2c1261c25d225e6306799eb29ef6bf8c2e249a66f"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "83268556032a7751412de161449b1a43b2811c9643ab3a07e4fa063707f7ace4"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "7dbcffe2e17f343cde99cbfad837929c7c2741d6e8fb0001c4861cc95c2fe241"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "5d1bfd5c55e071a634532adc25833848ebaaacb270d90b3a52fbfdf582667ef1"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "03e12d7a638892fcfd246889a25c1ac974c4b891db484bd80d52ca40a26d673c"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "db2242ab2a9eeb8ce72c59d4ad0d3d02c33a00208fdeadcbe8a3f9d87eaa0d89"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "12fd4eb5c28e8c6bd00e99f4201bb6b8b9b27222bd2b0002547a32bfc4713884"
+    },
+    {
+      "object": "play_by_play/season=2008/part-0023.parquet",
+      "rows": 1917,
+      "sha256": "5f2449f25a07eed1f1104486865feec908303aa81a6e72c4036e0e0480170d48"
+    }
+  ]
+}

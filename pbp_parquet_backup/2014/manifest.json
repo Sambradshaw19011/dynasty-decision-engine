@@ -1,0 +1,126 @@
+{
+  "season": 2014,
+  "expected_rows": 47629,
+  "parts": [
+    {
+      "object": "play_by_play/season=2014/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "6724c0cebc7b8d6103c25e10eac1fc531c2125a50402ba2013970dd47c86c52a"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "9f7827016cd9cdaf7145bbf2b17ac8e008aabc39f53d1ddbaa3526d23a511a6b"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "18f33bbfb919a28cbfb1a74317b6e4070d1cbc6e0ee88000ad7ac5e383558e9c"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "646fe1da5732198471ea4502f56cac96c0e3d23fdaac6743159d89ff7b15befe"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "2e3a5185a38981f2f179bf2e081a72f813ad1ba315a6f6551163d7d55e0fdb4e"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "319a23a0ad9c5d784fac7225e89677259647cfb2c88dd2a7239529fe94362592"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "673aa140b417a37cecf6ceca57260c77f68d880a568165bcc2000452bbc36f47"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "c3d477debd780d39d036e9607990b04b0d1b3f74c295c06042bf913f02dd5821"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "f3221ff2595b5a26f0d498a04d11040ac53bdf3e11862e8cb40e0155f6af0584"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "b3201fb4a8a801718c469646b0006889dc9af4ed9a349bfe1edbb938dd19cb43"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "ee7b2df731357ef05749485f7f0fee99fb7fa34cbc3e8d1c32bd1c8884bd1a7f"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "2cbe20e29fd0ff157d4a7afd81e8fb5be5dcff35a61f6cdddc2c9ae407b4b12b"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "62f4c37df1583631c1fb0c73fbe3da7f866754ec776c566b0c75d8ceb28c26d3"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "4d8650de49218a24f0a422fa1c7b286333a99bf0eddf4f644c01749789d1b6de"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "4122fee1bb838b464e02cf643c1bf0613e0cf099fb78a0a57f46332d45658f6f"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "57a21946767482ccea33947a5c727d09ae5ad3986159039b6020b2f842584ce0"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "e8ec03957926ab2a1356554eaaff723d55a565974dea892084489d6e15d403d2"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "f13cf1b710a2f6073729a6e070a36f8d9656c6a572c69720bbdeece4bd5ac092"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "f2d500117b1eaac7830e65ef46a35a2f33c71ca243e8cdef7ec928f6b8cb15d1"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "723378e76e20825d6d26a7cebf72c696494aa9c349e0101ba45f5a4609ca5835"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "0095508bd4f030d2d2d07c74df6717b615eeca3061c1232bc7bf3646c590a9ef"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "b6348b0c39bcf103ebd336bde08b00d8c1ab85c5f8d766a32bb09598b5e6b6ad"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "25cdcf0a5e5a70e633af20c3da18f958a084c25dc79c549f06c4a377c0eda1b6"
+    },
+    {
+      "object": "play_by_play/season=2014/part-0024.parquet",
+      "rows": 1629,
+      "sha256": "0cf118a8679cd3637427bf761188b9a0c07c334e831dea842df47291f81c82ea"
+    }
+  ]
+}

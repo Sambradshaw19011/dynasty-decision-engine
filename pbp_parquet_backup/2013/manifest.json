@@ -1,0 +1,131 @@
+{
+  "season": 2013,
+  "expected_rows": 48158,
+  "parts": [
+    {
+      "object": "play_by_play/season=2013/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "b8017d4849097237d12da36690b57a56e52828b72fc8c94c6babcfcce1d635ce"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "9f5122e3202256e76ff505778104e756ef7746b437902647e8b441264bdf311e"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "63340eb9b04246b9bd039cf16c6511b8f1cf533d7b8e1d59a152f470d2a2972d"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "6fe8f4ad3310ab3fa2b55b69f05fb4a744bd3250a774b69ca8460cc2012656a8"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "8a60830cf0e1f049fe4c26366ed86edf84641988333566e99257390f1f88d9ad"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "8889ef6b55c6466156fb158006afff4ed1a45f2a63c02a4a72ef3b62a4d448df"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "cd0ed5560e2ad3c632e44d470834f11c1a801f64345c90a68150c912d0ac9958"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "fdf44de1e74bf187611d61a7f7409580018f473d66dfbaf2432d238897e38a59"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "4c3a212ffba6e3897ec2a24147de2b5b841e1caeb527c5f0e44fc27fcf8cb57e"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "8f056146d0d286fd56ac72a9859518f3c12ce3e98ba77e33eba59f3335385ad4"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "b3ddf8f9f68c151da5ae5aae948bb4313ae4c99641dd1383c73a0227280b24eb"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "2d5c97c4213b3121d73e55dc02fc4a4444e6cf7cbb65ee22a4078b2c496f7483"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "50ce91e459b6736d8146888fb43a41ef5031488ca6f1718fb7f868f5af14f81f"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "e7eefbb9e052e1ba19b6019efc8ac9c4e8337b2176057e8d1f5c3f33e3b5299b"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "e068cbf87628f6d333ad786aeeaebe04584892775b45e89a6a252b2cb4fa1dcc"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "e1cba0f81f983f618b8a173da6bce053afa9451ec44331ffcb85c0d8a0c5704a"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "18359d13e53dab3e861018af47d729101511c496c97c503d51491e2bca756582"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "8435d6fb1bca52d236250b0e4605f2bdabcbd952d558433a3f605a332d485c25"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "22e5a22335e6845aeaa86660a152331228926affd60df3ea8a4743faa09578b2"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "3fdf49ae803957dc1231fb436a55072611527f91e147483c22d72952011bc19b"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "157ac070180ab6fdf50432833f5465a4813e522b5c261657bcbcff4d8ebfae0c"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "9129b715ff1c06d2559a024dc2fa1925788bed9b85125e464bbc3c64d6bec6b4"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "860655d95844b3798424874cf949ef713afe5a62f42c315671a627f7dc2ca8d3"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0024.parquet",
+      "rows": 2000,
+      "sha256": "40a77a5eb5c6eea53ce6dc0d383baa7c0c01ae2068be6ea23ca78a47331c5929"
+    },
+    {
+      "object": "play_by_play/season=2013/part-0025.parquet",
+      "rows": 158,
+      "sha256": "8edf9878694fe937253eaa16cde6437556e5d236e1e9d9502dd746c3cbce7a5d"
+    }
+  ]
+}

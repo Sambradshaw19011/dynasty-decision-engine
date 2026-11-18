@@ -1,0 +1,126 @@
+{
+  "season": 2011,
+  "expected_rows": 47448,
+  "parts": [
+    {
+      "object": "play_by_play/season=2011/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "39a966f77a706d158808fb64efa4f3780e171bd76b850a71a0031514bfddd679"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "2aa74a5f5cf7843e60360e061782f4607406e3357a0954e847d8b6cd7c687d41"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "2b2ee9dba7fe2587bedc0d532da2ef55b9c8e28954754b9d6c37143f29113d2c"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "438d64f85aa1dd0b0e2bc764397a2539bdf24d525a43a99b2e6d45255c20ec2e"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "5df9bb4f31b98ba4bdcb211add719159433755480845909d9d5f9d059f02cfce"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "f174b3107ec4491e6a45a09b038082f06ef217778634a881f786e361f43660e2"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "b2dcc9ec65efacf88baa199576cfc9d037bc5ab76ecac52c74476e18bdf568ee"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "75f3c5adfcf35119271a8062bd2dac09978d54d8afc9c2b13120b126a1dabc75"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "9594b5b8651d6fa76514cb8b88eb2f72452a61a468b891ddf5994c0732c0ddda"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "e1cf42fa101feef4c5c81ae79ddccf1c1209396704ea465c1af3207023011bd9"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "bceb68b7e1ca6e20c119f07790ebd4d36041d496b57a97ddfc0db643f5ea0ba2"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "e9198a9b11928e5e8a79cf15450804a8584e9a3942a22e587fd2be9ec79010a4"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "a6117f63c708001f2a74c3460a40d0aae825dd45681897b3e980ad2c5f4ba023"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "87270eb7e6c42b519356f0ade21406451d2f32dd0ce0d731d25a6559359bd59b"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "19c1dafe40f73095d06ad3c48f0c4272c3cda14f8dc96b3d6095bf25da05b2d5"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "dd4a2b40b2635f4be4e5c36f0cdf99aa1738bc63f08e9591419627d15daab0ad"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "6b4c5c6992196d1eb6ac05e5caad078b4c07650669fb6c58d9b4fb8fe31a4fd8"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "e8cb94132ea567627ecd01063075877d4e9758d3d9483c270e5d068cdf7fbbe3"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "95544cd8f9651e9a4f1ff57f46065940a66810b8854ae04c09f14cf53d3c3b7a"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "bc2d9a1814f2134d3dd1e08369b33bb70e3f33522b52217d93c334a002606fa1"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "075249c75d06e5ed6f101c61a2d44841f271ee110d42a95f371d7665e36eccef"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "c33ef0f3a760577da86f268fdcfda2203c3dfeebf16e3253b1880086aa293762"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "a311c7009edc4da3e0c8a59e0f3db9ae546b3c1c938619f783477b2a4f74e7ec"
+    },
+    {
+      "object": "play_by_play/season=2011/part-0024.parquet",
+      "rows": 1448,
+      "sha256": "4fb6b4e9b7311c49954216dcd515c4196f545c599949ae18b444aa22ce5dd695"
+    }
+  ]
+}

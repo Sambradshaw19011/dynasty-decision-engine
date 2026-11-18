@@ -1,0 +1,126 @@
+{
+  "season": 2006,
+  "expected_rows": 46299,
+  "parts": [
+    {
+      "object": "play_by_play/season=2006/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "3664f3536ca3b58952c7937e7d9d9b92a061dcd3f11d4f7d2d7aeadcdbb3f872"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "90d39eb6b52cc7cd33f4856d6bd40ab3d86314ef3de75d075895c760aa1fc38d"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "153b5328b6bb0ab67b26d04e412e0d0cbd2c96601a5f57649a385375682bedcf"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "7bcb9c4cbc63765c3748f815f7ce4575ff62fc277c57bf72875386aeb9cefebd"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "c4e350eaf7750d9614f22d79124a7ae14ccf92362ca6fcefc4f1cf1fe4c23a1e"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "60e59ddc6bb5810e1f8a3f08ee4e4e8457cf6d5e6d356e3699cd5411c3856303"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "1321bfbb64bbbdd95c749f1c46bf2b16824ee94bf1c6f31a69845d46ccc8a576"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "7ed9d06877b25790e6c5276bd9eddc03ece793d7d687871ccc0d5e4878e6ff4d"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "a4ca8f11fe9710aa3712cc6c909df910c276c530acb5583fd1483e52c4c066a1"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "2310749c938558c01708aea241be1dbcaad0ed2d9b34253a79e2bcdb2a7645df"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "ccf2cc91e74f823e271fe7265333260bd35e3748362b5874488387f671644e0d"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "64c3485bde8a313d6bf6d711da0ba56bed8f4fb9ecbe4ef464da6a81054db6fa"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "92eb9637672921b4afd8fea721495ef1bfe172ebf5f51425bdc52a380ce510c2"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "d72b2cece128ee36a8ecd9bfdd535bb7b992e7262547f14bb21d15aeb4ffa216"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "4802dbcd6f102182660aca46112d2d629da467b3bdf331cafe9a22edb711c5fb"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "42875e6558d29ecebea0edf928d6e3eb974cf1bb1b12e355a7229b2b21fd8d4a"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "32f2b1982730520d91af073268060d392bf60fbc0032a3040e2cd1f02e11f6c5"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "c6572f34ff584530812930dfa698fc09d88aad720281707972e288de3d4927af"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "67b2944126a060c3804dd846de5dd9a19706b50fbac406bc8c34b7ccc02b5c34"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "7e9963acd0fc1937824fd69cef6d58e0c6adb5e17b84b32f8abacc6deb4192f8"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "f2d1fec8187745f479e33c869d52ba9069bcc011335f077594bc8afcb127ec0f"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "c1b1c3171dca4a6586f9cd90ee503f29e39b700d5fa466406e19468fae871a33"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "87da9f0d5e780712ad77bb99e0156b490f9332cfdd1ce292254c10fc5398103f"
+    },
+    {
+      "object": "play_by_play/season=2006/part-0024.parquet",
+      "rows": 299,
+      "sha256": "f2b82416cbafb9868571e27e0a844357d073aade843509583d73671730be6f12"
+    }
+  ]
+}

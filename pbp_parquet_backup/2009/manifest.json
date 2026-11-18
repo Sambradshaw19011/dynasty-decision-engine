@@ -1,0 +1,126 @@
+{
+  "season": 2009,
+  "expected_rows": 46519,
+  "parts": [
+    {
+      "object": "play_by_play/season=2009/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "880e6cd4a0a7458ca19232d0c63b3867d12a9a97f8175f4737954386fa3d3534"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "e2bcdf304b47a04871249e64313b1e6c70f06a777c2070db365115db5919f567"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "e2e056812b9b6c2a6a60d2b97a2b4752c38d6016f54016463f26f55f550c9a43"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "4a783e99fde0ca31d2d3c34521352ba0b5dbac7e4f9c338bfe09bcc7cb985343"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "e647f3fbad949ff4547b0f0e53642cfd799c741e34ed80c3c996de4339fdce12"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "847a672ed322a9533b3af8f49de88e240ed9e58368f5a24b0099e8f438e656d0"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "bb1e08eb62249705659680bd3cd4c3a313fb85712a31ce5a3f8db8cbbb8f90f4"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "b0bebf3a00c5c253d6d236323e07d9690ae97c9ef55598112c9730ef3156ce46"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "9556f92a7ebf685a44d71347ab38764bee41ae5f134329a39be894ddd3dc8d23"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "d8f3979dbe2a4bd5a4496aec56ab2bca057d250c6e6769678c7427f8a98a5b84"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "e72932e110a571326c42b1341c7e730ae01692fb57f7bd71f5f90348239bb70d"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "c50116f0afa03edd5bc61503beab544b1348eca1270a792606a616b0d18a6b41"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "d49f08d3c6e8459412c9cc08d48ca0cda280a8fbf5f5b03ec09742b7b56069b0"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "d250c7ec090bd3285ee7af1a638736dcd8c513eb27bc9e450f3e1219126bb065"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "b72b3ead44019e2490c9cd22a71b8d64147d3c83b7f04f1933cb29b165574d4f"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "5b4145c97c155f3ade6e0cb2a3e2784241ef2a43c3dbeecf7c85699f3b71b17d"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "2b128c1a279920830128967eeef43d3101b308dd4539acdb300d959885c6eb0b"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "363e830d092b079bd1983d202e784ca2d90bb53b27729549c3f97e714eb73ac0"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "ff77625abfcff21e6517602ca3440a48744672b24ee78286599e2f07c8882ba9"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "2e79a937af7ed245ce540575bac2d51ecb1cab609c6b5956de2e541a4856730d"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "28b9d7f1fd2734e45ea00f9f1f0c03f30b52a9d95dd75f2fa8d993fdfa42c0fd"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "58ac8d4c6e5953b72e71ca73a3730d91e55ade88fbf0796e66170f3279ea2049"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "b4c488d99a89441626154d733bd9b86f47ca39b59ba4e3202abef222588ca1cb"
+    },
+    {
+      "object": "play_by_play/season=2009/part-0024.parquet",
+      "rows": 519,
+      "sha256": "fcd24676934f6309c34c511a84dfd11b3811920bcb57ceca43900370cb465aef"
+    }
+  ]
+}

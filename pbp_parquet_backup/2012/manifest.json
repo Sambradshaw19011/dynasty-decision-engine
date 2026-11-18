@@ -1,0 +1,126 @@
+{
+  "season": 2012,
+  "expected_rows": 47834,
+  "parts": [
+    {
+      "object": "play_by_play/season=2012/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "9c001440a92a13207a1cde3b62cc0c763d17ad49f20a342424ebcd307d3c40c9"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "fb0a653bb6e98135eb43362fd0fa5401690afd61dfc3b58eb7165e91c3783d39"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "b8e8c1879fcf242263c7bf4947b6258982afc9e913938f702fa660b1af3538cd"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "8ccca7beba60588aca0ea4d9ae420dba81d1772a0b6218911dc47c733618f544"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "f0cf3d942c55eb8bdd04d863c306b2e19aca20c07e0671164b54e9237013005d"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "80442e5680cfbcbfd4904be0f7164dfc97cee8150664f1eba99812b0c198d197"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "e7903d0391054b19367f5646bf62c594ca01be44700030b84f134e2d4654854b"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "7eb1c01007ded8067d140def6529a9ee555984684ad78224e8d0b8f3f6a47175"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "20201fc8c0395e999935d700cb6734c8ef49938e1b327f3788cd9a67554c69b8"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "669efd70513f8bd25afc8064ff63b5895efb398003e7629e060ebdb13e47aa65"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "39edb0718ff335ab7e8999229fcf3afd0f97bd395e83f06f2466fd76eca55fb6"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "8dbbf69512dd8c06bba61e877a077ed422f0e33ed7723fa7714025adab895d1e"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "4fc7119531b79883670ab0cddbb6881887130b809a03814900b9df7a3421e10d"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "69a9ef2e35f2985fd896785022acd200f3e4e97cdc089fe113194a7ab5528eb8"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "c3af2689812f56e9a74cd49b27bf16e9e511937a37099768352d395f97f13be3"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "d7d069b3f3c61f51fedf7eac72a97f8a7c02a73ac548fe659cc50fad5cc730ae"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "8cb0d3bce640a2bf60b6327eea2ee93bc12d6c016ad11640d2602a8c1890ee34"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "1f142633cffa48b3d852603b627c2817d1366b7c77e13da113ef041f2dcab552"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "68f7b104e407c2d1e2ff95795d5bc10f41c62aa8c63e4943708cee7d35f21f6c"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "efa6de98341e619b569271eeb718ce6139b2c2f7aa51469d221b55c34132ff8e"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "38d427b5c21e4137e613991cdccdb97a0cde6c4c2a93f5222dfd72feb07f45f1"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "c790382550c271397618e5ed7bd52deac823cb9ba892a35203a977859e2eaabd"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "65e723f8b271995c596b83a9915a6854e04485f457682e2736de5827d820c238"
+    },
+    {
+      "object": "play_by_play/season=2012/part-0024.parquet",
+      "rows": 1834,
+      "sha256": "4ded963a0221941420d421bd3770c7767c1c36904a8699b281f23ff2a9ff8e74"
+    }
+  ]
+}

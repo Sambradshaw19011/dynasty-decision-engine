@@ -1,0 +1,131 @@
+{
+  "season": 2021,
+  "expected_rows": 49922,
+  "parts": [
+    {
+      "object": "play_by_play/season=2021/part-0001.parquet",
+      "rows": 2000,
+      "sha256": "a56704e8169707b8223727b65fe0f01b94cfb173114f05ca27d76c946ea73ba4"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0002.parquet",
+      "rows": 2000,
+      "sha256": "5e394c05ee725db77a2968620306a491a5356a589880c53021d26ee8fe60712c"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0003.parquet",
+      "rows": 2000,
+      "sha256": "5997332e1de45808f4eec648e08ba106633bf8673974e9d2d2a3a263660fe24c"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0004.parquet",
+      "rows": 2000,
+      "sha256": "463c3fc80737f22fcbf6c315f15d821e048ca066c48e06786aee78dc5964ef51"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0005.parquet",
+      "rows": 2000,
+      "sha256": "9be28e4baa519339526f387cd36968a27d24da5c6ca4074913c35ae854f084b3"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0006.parquet",
+      "rows": 2000,
+      "sha256": "ec9b59180c47fdb944999b1d0f6beb3764f6bf00f2715f12c566ba6bf3f23eed"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0007.parquet",
+      "rows": 2000,
+      "sha256": "868936996516dd774d41d868ab4fbd1b0b5a7cee8e9f0ce44735fc4241bf4dd2"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0008.parquet",
+      "rows": 2000,
+      "sha256": "88efb91827d631288aff669cf47c1dd69d3f59c33cedae815d780d2f1bb7daca"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0009.parquet",
+      "rows": 2000,
+      "sha256": "b57e7a699b2a3cd0dc84048f91a4bbfda1f23915ce1eaf5fcfe4dc799a7485c1"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0010.parquet",
+      "rows": 2000,
+      "sha256": "274011393af8937f5b1390c20d66dea72e73a4d99f6c7adbf245714906e9c43a"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0011.parquet",
+      "rows": 2000,
+      "sha256": "f9b77f6625391a8a1095067e6371db80e5a5cafb8d3b19f33bfc10b5b8d06803"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0012.parquet",
+      "rows": 2000,
+      "sha256": "0c84e29f8a997ad3ac7f667a2439410d669bac3845ae140dc8d45c70aaf74480"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0013.parquet",
+      "rows": 2000,
+      "sha256": "43433da426272bfe3951247e5c570e5e0aa6e29b848cd93ce63890d4c61a4092"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0014.parquet",
+      "rows": 2000,
+      "sha256": "1f79bf71bbb20dda94a69c53442139336c27cc87e7dd36a9ae3d09597a111aeb"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0015.parquet",
+      "rows": 2000,
+      "sha256": "8001820453d2bf56c901289cb7c915656f1a94e3ab505b742cc90c50e6918176"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0016.parquet",
+      "rows": 2000,
+      "sha256": "2ba4d2e261b4f04617250b84e7de3e870e6f5c959064255827323687c9c91ffe"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0017.parquet",
+      "rows": 2000,
+      "sha256": "f397fd1d3b7895c05f6d15c21fb1ee068dd6b86b27f3bcaf659965718a054649"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0018.parquet",
+      "rows": 2000,
+      "sha256": "bb598840dfa7bba60477631aaf8c14ebed6fbca82e1423d17bb5be42a7c939d0"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0019.parquet",
+      "rows": 2000,
+      "sha256": "856c1f0bb7215a94c48d1ec444eb1460a8f8707a53951224c6cf0caa7e34169c"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0020.parquet",
+      "rows": 2000,
+      "sha256": "01372c8de7cd1e1207b49a8a8b6b5d92689d0d31c3080a46bea3360da352e021"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0021.parquet",
+      "rows": 2000,
+      "sha256": "98780d35602b6dfa3d4af4bca8397e18198cf65f27e554a9aeb248661f46985d"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0022.parquet",
+      "rows": 2000,
+      "sha256": "0775581791772885cc8b419875b92c0c0bfd5529dc948cef56230492346d629b"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0023.parquet",
+      "rows": 2000,
+      "sha256": "9c3c4959f78d13df815ae20f9f50e27a754c1defc67dcff843a588c16c6ac4a1"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0024.parquet",
+      "rows": 2000,
+      "sha256": "e1fc1fea201294033a2892f475da10174cbaf0fb78e8dd7f8feec034d2b22160"
+    },
+    {
+      "object": "play_by_play/season=2021/part-0025.parquet",
+      "rows": 1922,
+      "sha256": "a4c2bec8f5d741f5e8176af296cc6ff3df91b9f6806c78e15f31b9fc8d72cbf3"
+    }
+  ]
+}

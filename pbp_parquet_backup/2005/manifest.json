@@ -1,0 +1,476 @@
+{
+  "season": 2005,
+  "expected_rows": 46823,
+  "parts": [
+    {
+      "object": "play_by_play/season=2005/part-0001.parquet",
+      "rows": 500,
+      "sha256": "6b9cb275f54391c49126596221f5c15759b38b8260a2ce713cd891e4a47a772c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0002.parquet",
+      "rows": 500,
+      "sha256": "356d907fc65d39ad52b153ea75cd7cf5111f13e4fdad39fd4fd89a861324394c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0003.parquet",
+      "rows": 500,
+      "sha256": "a2f90c9adc902baa395a6c1d7a0da81a471cd5d8de914f55e4d09425bda429f7"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0004.parquet",
+      "rows": 500,
+      "sha256": "5ed567eded9ee1ee58a442447a9d1f631cc722d27cfee3b31081ab65f95ed1b1"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0005.parquet",
+      "rows": 500,
+      "sha256": "600230b98e16e1785c524ae012de506f7613473729d9511dabe39ab0b13d96f9"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0006.parquet",
+      "rows": 500,
+      "sha256": "fc704829967ca5b04abc79e5449ece99c491bf6f6886feb6c0d1b92773e1e395"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0007.parquet",
+      "rows": 500,
+      "sha256": "1a90792a1292098a8fe7ecae1dba770ceee366957685d14dc2de06b08f715097"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0008.parquet",
+      "rows": 500,
+      "sha256": "420483c7a25681bcc419e0508a0d6287e56d0fdc9cc89caa5c056fb194c0cd82"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0009.parquet",
+      "rows": 500,
+      "sha256": "7dc6bddb52a104e23001fbaea5a32eb2ece1b2250f667262860ba4d60f5c88c3"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0010.parquet",
+      "rows": 500,
+      "sha256": "84fa3983493684b938ec10ab49b3fe63bb30ea08aadb3728e2216f965ec6980a"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0011.parquet",
+      "rows": 500,
+      "sha256": "889815ff0db00339890153140634518edacf7efdd224e0565e8b30228691afd8"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0012.parquet",
+      "rows": 500,
+      "sha256": "b33ac859dccab2d3b98789d389ce30cf627a858cd64163db118a5043d4c34004"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0013.parquet",
+      "rows": 500,
+      "sha256": "008ad0d2f562d87848384452bfe02c1c19837598a02fd5309cd6ee242525a56b"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0014.parquet",
+      "rows": 500,
+      "sha256": "87190bfc2a8a466c91e4e69441103e89affb47ae29170b857842a098ffb7aa4c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0015.parquet",
+      "rows": 500,
+      "sha256": "b0bb6dcf525490dbfed170acae344d559a6d6fd766712b83935bca8563a679ee"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0016.parquet",
+      "rows": 500,
+      "sha256": "e0fc2fdf288ba54262d4e57afc112f1aa48344f848b7027bd30b1f599e41ea30"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0017.parquet",
+      "rows": 500,
+      "sha256": "4dcabf159cfa2b9cfba5d79ceb0be08cee993fceea193b8dfbaf782af8a1093b"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0018.parquet",
+      "rows": 500,
+      "sha256": "924807742436733b0bbdd3ad6a904c64a7c4bc93b3812cda0a694875d32b4ee2"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0019.parquet",
+      "rows": 500,
+      "sha256": "8993422016a7cd6f96e39e3bc3c7d9dbb746fc3144992a5bdfe30ed555944c9e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0020.parquet",
+      "rows": 500,
+      "sha256": "4909489e3d5916f5497feba96e8aa3ff1e53c15f1217534676ae3023ff0da430"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0021.parquet",
+      "rows": 500,
+      "sha256": "21074f24da3ca7f0811e747d108cc07a364bb14a3a769de6ab55ac69eed7a25a"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0022.parquet",
+      "rows": 500,
+      "sha256": "cd114fc601c047a6dc7d85458d3ce1cb861082ec348527c72d9430e86a53f536"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0023.parquet",
+      "rows": 500,
+      "sha256": "5849124f8a741529efdda67158373e33a56aa8498bd20fa82a172870d36dafc0"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0024.parquet",
+      "rows": 500,
+      "sha256": "d5d827dfd89455d8bdfcf655b8017cc707511ccbf7831c4fa0ddd18809b41c7f"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0025.parquet",
+      "rows": 500,
+      "sha256": "4dacb476cc80abb34f24e7da02a05f51b26e2656a89741d8152350947b90c856"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0026.parquet",
+      "rows": 500,
+      "sha256": "ba120119ec821a3e09e8100e028d994620025f9b69037725bd8f0e7115e01034"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0027.parquet",
+      "rows": 500,
+      "sha256": "5ebb061332d56cc79edef3e55af017724fe1f06c7de91d033a06b9861c0b8792"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0028.parquet",
+      "rows": 500,
+      "sha256": "c5e2679d3809e9c258e265560e5cee0d13d035d549825e436d2b05fc3bf944e2"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0029.parquet",
+      "rows": 500,
+      "sha256": "f17f8b4de00d4a4e5da337a8e5ed6699b1a39c2c2db3705ea991271f39c27c87"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0030.parquet",
+      "rows": 500,
+      "sha256": "8f1e6b944880da356c25de8cbb7b487e20396320e2513f299b821d0cac598653"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0031.parquet",
+      "rows": 500,
+      "sha256": "6454505f49552b46a390517e7137357475fccb57bb59396b985b836b47314622"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0032.parquet",
+      "rows": 500,
+      "sha256": "b7887631ca5645c99ed3cc3f1e06f3671448d9b8889b4637a155c8c2fc04f47f"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0033.parquet",
+      "rows": 500,
+      "sha256": "8bc7ebba435c86251be02992efe81991151937adcf929a2e82913dbcfa1f2113"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0034.parquet",
+      "rows": 500,
+      "sha256": "d75bdca7c6ac4813f499adf8b46bce0ba713858c75b606a68309e50554fad261"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0035.parquet",
+      "rows": 500,
+      "sha256": "b6ac45467440da1428cf825f561fda16481e29c5a7cd5d988038f8eb7ab3bf49"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0036.parquet",
+      "rows": 500,
+      "sha256": "d43aebdc0d3a02466f62862de4b46550886fef55f51c8948fbe86f52a6053249"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0037.parquet",
+      "rows": 500,
+      "sha256": "f461a9fcd7b37a607834b798d174624562318342f2c18114d69ed924063cd590"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0038.parquet",
+      "rows": 500,
+      "sha256": "b242068005da7a905180b75851f296701d636bfd0992881ea2a93bf458e012fb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0039.parquet",
+      "rows": 500,
+      "sha256": "87447cd4ac5dc811997fac696d23ccdf69e36192655cbb584b8588ceca777f8c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0040.parquet",
+      "rows": 500,
+      "sha256": "d97e8512bee98eb22b2f4daac9face2eb963e017c145115a046fe8648870bda4"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0041.parquet",
+      "rows": 500,
+      "sha256": "44955a435d1fb95b83c469a70e537b071ccec9332246200d427beb9ff4cf89d2"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0042.parquet",
+      "rows": 500,
+      "sha256": "ea3df24ca2bcb6b209e713b805741fcad5ad99ee6b49049d9b69fbf8af448696"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0043.parquet",
+      "rows": 500,
+      "sha256": "876bba564d4de4a4ede455a98278c9f333ad62e579fd52860aa09b3e1d762313"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0044.parquet",
+      "rows": 500,
+      "sha256": "4897c98a9cdf29738a0459dddcefda1fe9c5ea81a2e3dccedf57214750761d03"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0045.parquet",
+      "rows": 500,
+      "sha256": "0964fa98b0957585a7620e328660c4a4607d288765b05247139813a69572a299"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0046.parquet",
+      "rows": 500,
+      "sha256": "27ee02447ba24011961d00b85077fe5ca1f61be3c61dde864a79fb44346d492e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0047.parquet",
+      "rows": 500,
+      "sha256": "1902323b9e8e54e8fed57e39eb15701e68b92fffd4781cd185034b95d5249b79"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0048.parquet",
+      "rows": 500,
+      "sha256": "dba0f351f2d2bcca8c1db02d358903bac1b884281407497cfcc10e649332d5ac"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0049.parquet",
+      "rows": 500,
+      "sha256": "7506c7509625e64aedb07bd1410ce58e9d6567ec9fd76efef7d89a26f75cab9b"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0050.parquet",
+      "rows": 500,
+      "sha256": "28e2c83541a20c7f1bcfec974d42f2dee30f51109cb8faea34a8f81f6199bd15"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0051.parquet",
+      "rows": 500,
+      "sha256": "79b9ef1ce96142af604a1aec3e91ae31820ee5ce63b2416ca37e47e11986fdfb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0052.parquet",
+      "rows": 500,
+      "sha256": "0970ae68ae8318476acbd683e06f18d5d56128f477d88eb42118a69346c89a72"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0053.parquet",
+      "rows": 500,
+      "sha256": "2efca7c4168b729ee53a093664894e93a38af711e63a83f1f4e05ac2cabab80e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0054.parquet",
+      "rows": 500,
+      "sha256": "375412fdd1ea491d4c82e417a46f3240e9ee0407940d02723ac2598512042d0e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0055.parquet",
+      "rows": 500,
+      "sha256": "56977e98de0245ac50a07c4412149fc7f501ee20944766462cf07973db457702"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0056.parquet",
+      "rows": 500,
+      "sha256": "c913cee14283116f41aac715cb320b6a386584fbbd057f92475b55a500bfef5c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0057.parquet",
+      "rows": 500,
+      "sha256": "d157badb2e94fe3053b7b8ca230b4eed3ec08486510a0d5d125d2b49bc0c380c"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0058.parquet",
+      "rows": 500,
+      "sha256": "34cc5a66f91c8827b9d6024b03d2adcd0e391b107da2cc7dad681e67b25d6dfd"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0059.parquet",
+      "rows": 500,
+      "sha256": "23adb8270bd09e984bd22b492081484966722fe83e54fd9ca2ccdfaf4d8fc3e3"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0060.parquet",
+      "rows": 500,
+      "sha256": "7621836bf7478427947d76be9290115865d4b4bcff24b6de83461249d7894e28"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0061.parquet",
+      "rows": 500,
+      "sha256": "7a1a854402b7f2c69cc131597bec5c7926c3736702f3b1e0501c07d35bfd7da4"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0062.parquet",
+      "rows": 500,
+      "sha256": "3fefc9560c7726a76007383ac353c200cfdd735f394e0be8bea226d8bb33c09e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0063.parquet",
+      "rows": 500,
+      "sha256": "d44a9e46a8dd619e8552b3697d4d5e02afd2b90ffc74fabb751f1a023361d8e5"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0064.parquet",
+      "rows": 500,
+      "sha256": "7b5d809e511e153af0fa3655f4aa07e159cb22d335de0578955855752e55980f"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0065.parquet",
+      "rows": 500,
+      "sha256": "bb6ef03e0254c227d890fb9e8d1918747497c71fe3fa791f01e003e6885fec0a"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0066.parquet",
+      "rows": 500,
+      "sha256": "cd7a7168d57ca785f2cd10a95c08d2099a6ba7dc4471e343b59baf2cdcc30560"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0067.parquet",
+      "rows": 500,
+      "sha256": "f7b982b92b4c5f652bbc0a466ae70b35c236dbd84a3c7164185edf078e12aae8"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0068.parquet",
+      "rows": 500,
+      "sha256": "494b674b57c1c37482596cbb9a1b6a6fce738ed975bc360ada9221223b3ef1dc"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0069.parquet",
+      "rows": 500,
+      "sha256": "03e763b7297207f8c22310e1cc116329f3eb2ca5150b210dfc7774b5bb4a92f0"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0070.parquet",
+      "rows": 500,
+      "sha256": "2fd7658506247abb837ec84c1914f08f619497806675a254c4b27082721345aa"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0071.parquet",
+      "rows": 500,
+      "sha256": "5b25e012170314538930aadd06b0b1dce2d5a1969f95950619e395eef70981eb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0072.parquet",
+      "rows": 500,
+      "sha256": "23aed4f10eaffa53204e253acfe7c46e421a19353923cefb9883ef0c737f14eb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0073.parquet",
+      "rows": 500,
+      "sha256": "7670fe1bc0bf6f83e24ba0ed4f0825a5a951df223027dd03d7bac77a275bd967"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0074.parquet",
+      "rows": 500,
+      "sha256": "4436da4d1da956e42285618c3c2b9be0da7cf492a2bfe83f1af23c44a2d09fab"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0075.parquet",
+      "rows": 500,
+      "sha256": "411e3c44a4b2fc2f15c8d1e8de7d2cd924a373f4a332767d7aad8f4312088e67"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0076.parquet",
+      "rows": 500,
+      "sha256": "d3026760009e95c6a086f385bc00428a39629d6d319ce5c733c24cf107ceb089"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0077.parquet",
+      "rows": 500,
+      "sha256": "314b255cdd07a3c17ac193ad81dccc91882277a60837f88cf1da9a44092daf9a"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0078.parquet",
+      "rows": 500,
+      "sha256": "a6682adbefd22a8aab97468fe3b68fa836572d427c8a04170e7f92778b57325a"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0079.parquet",
+      "rows": 500,
+      "sha256": "9ccfba2f957c53ca2311e6ddaff9984a4a0e885c5cab6b7708101e821bb24cbb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0080.parquet",
+      "rows": 500,
+      "sha256": "dd7902b5820699ff1eea4241e25f5f90a48fb71d1c98b8f049c1167af5b1be23"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0081.parquet",
+      "rows": 500,
+      "sha256": "668ba6a5c3b9d3053c5ed34afbf798c1ac0a34b22241f9e794019fc36e73e441"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0082.parquet",
+      "rows": 500,
+      "sha256": "b17a315eb35f45293e01c5eef67c53ee7a152247d95783dfed8d2cd768030569"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0083.parquet",
+      "rows": 500,
+      "sha256": "4894c037cce57ddaf4748c6d4e30ae131866a7fb64fce404b6fc92b6662437ab"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0084.parquet",
+      "rows": 500,
+      "sha256": "984442301f6f29c5e50eb7cb678e046b620bdd60ba4801e3c7549a59780f7097"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0085.parquet",
+      "rows": 500,
+      "sha256": "c63c671f2688da109ac9270ab86b8eaa41fc612befdc0a1a8873bd04a7f5fe82"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0086.parquet",
+      "rows": 500,
+      "sha256": "521cdf7027d06509f8c1aaf6520841b6fd354ed7323db67bcf23a2485ea0f838"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0087.parquet",
+      "rows": 500,
+      "sha256": "b784b87774d77698763dc2843dfc0a3082b13f7e2235a473f21a0b1a739c03bb"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0088.parquet",
+      "rows": 500,
+      "sha256": "c16f0d2d20a066ea8eb154f5681c3ebc75ed88a37d381bb5d16a5805ba3f6799"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0089.parquet",
+      "rows": 500,
+      "sha256": "11a22b669a1c69e6a5eb066a0dcf903c46eef9e15eee7a607175b9247d2f6f33"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0090.parquet",
+      "rows": 500,
+      "sha256": "bfce1c94617ecf9a13f86b0179ceee501162eaffc398de47a7b53ddfb44a44b9"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0091.parquet",
+      "rows": 500,
+      "sha256": "8dd28df89a7a9ec22044d2626acab313527b6336660e0d18c3c5123c00c26dd9"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0092.parquet",
+      "rows": 500,
+      "sha256": "abb7c30a9094d6437a0ce9e4ed6536c06d4dcb54fd11db47dbfbed0f3f859a1e"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0093.parquet",
+      "rows": 500,
+      "sha256": "c6c1043410c5064b836b323423f996f63f2667ca79c2b9a02eba087c764e7f1f"
+    },
+    {
+      "object": "play_by_play/season=2005/part-0094.parquet",
+      "rows": 323,
+      "sha256": "de61a6363a641b74cfdd80d7aabe21ae10ab295862c055bbf77aa515841c0eac"
+    }
+  ]
+}

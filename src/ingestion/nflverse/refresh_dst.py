@@ -290,8 +290,22 @@ def main():
             backup_response = requests.post(
                 backup_url, headers=backup_headers, data=existing, timeout=600,
             )
-            if backup_response.status_code != 409:
-                backup_response.raise_for_status()
+            if not backup_response.ok:
+                # Supabase Storage can report an existing object as HTTP 400
+                # (Duplicate) rather than 409. Only accept that exact case
+                # after verifying the bytes already stored.
+                try:
+                    error_payload = backup_response.json()
+                except ValueError:
+                    error_payload = {}
+                error_text = str(error_payload).lower()
+                is_duplicate = (
+                    backup_response.status_code in (400, 409)
+                    and ("duplicate" in error_text or "already exists" in error_text
+                         or "resourcealreadyexists" in error_text)
+                )
+                if not is_duplicate:
+                    backup_response.raise_for_status()
             backup_bytes = client.storage.from_(BUCKET).download(backup_path)
             if hashlib.sha256(backup_bytes).hexdigest() != original_digest:
                 raise RuntimeError("Production backup checksum mismatch")
@@ -305,8 +319,18 @@ def main():
                     f"{url}/storage/v1/object/{BUCKET}/{recovery_path}",
                     headers=backup_headers, data=backup_bytes, timeout=600,
                 )
-                if recovery_response.status_code != 409:
-                    recovery_response.raise_for_status()
+                if not recovery_response.ok:
+                    try:
+                        recovery_error = str(recovery_response.json()).lower()
+                    except ValueError:
+                        recovery_error = ""
+                    duplicate = (
+                        recovery_response.status_code in (400, 409)
+                        and ("duplicate" in recovery_error or "already exists" in recovery_error
+                             or "resourcealreadyexists" in recovery_error)
+                    )
+                    if not duplicate:
+                        recovery_response.raise_for_status()
                 restored = client.storage.from_(BUCKET).download(recovery_path)
                 if hashlib.sha256(restored).hexdigest() != original_digest:
                     raise RuntimeError("Isolated recovery checksum mismatch")

@@ -57,10 +57,12 @@ begin
     delete from public.fact_team_fumble_events where season_id = v_season;
 
     insert into public.fact_team_fumble_events
+    overriding system value
     select (pg_catalog.jsonb_populate_record(null::public.fact_team_fumble_events, x)).*
     from jsonb_array_elements(v_events) x;
 
     insert into public.fact_calculated_team_weekly_scores
+    overriding system value
     select (pg_catalog.jsonb_populate_record(null::public.fact_calculated_team_weekly_scores, x)).*
     from jsonb_array_elements(v_scores) x;
 

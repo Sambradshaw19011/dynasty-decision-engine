@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import requests
 
-from src.ingestion.nflverse.verify_dst_snapshot import verify_snapshot
+from src.ingestion.nflverse.verify_dst_snapshot import verify_snapshot, TABLE_KEYS, NATURAL_KEYS
 
 
 def upload_snapshot(client, *, url: str, key: str, bucket: str,
@@ -49,6 +50,8 @@ def upload_snapshot(client, *, url: str, key: str, bucket: str,
 
 def verify_remote_snapshot(client, *, bucket: str, season: int,
                            object_path: str, digest: str) -> dict:
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
+        raise RuntimeError("Invalid remote backup digest")
     expected = f"dst_database_backups/{season}/{digest}.json"
     if object_path != expected:
         raise RuntimeError("Unexpected database backup path")
@@ -56,6 +59,26 @@ def verify_remote_snapshot(client, *, bucket: str, season: int,
     if hashlib.sha256(payload).hexdigest() != digest:
         raise RuntimeError("Remote database backup checksum mismatch")
     document = json.loads(payload)
-    if document.get("season") != season:
+    if type(document.get("season")) is not int or document["season"] != season:
         raise RuntimeError("Remote database backup season mismatch")
+    if set(document.get("tables", {})) != set(TABLE_KEYS):
+        raise RuntimeError("Remote database backup table set invalid")
+    for name, pk in TABLE_KEYS.items():
+        table = document["tables"][name]
+        rows = table.get("rows")
+        if table.get("season_column") != "season_id" or not isinstance(rows, list) or not rows:
+            raise RuntimeError(f"Invalid remote snapshot table: {name}")
+        if len(rows) != table.get("row_count"):
+            raise RuntimeError(f"Invalid remote snapshot row count: {name}")
+        for columns in (pk, NATURAL_KEYS[name]):
+            keys = []
+            for row in rows:
+                if not isinstance(row, dict) or row.get("season_id") != season:
+                    raise RuntimeError(f"Invalid remote snapshot season: {name}")
+                key = tuple(row.get(column) for column in columns)
+                if any(value is None for value in key):
+                    raise RuntimeError(f"Null remote snapshot key: {name}")
+                keys.append(key)
+            if len(keys) != len(set(keys)):
+                raise RuntimeError(f"Duplicate remote snapshot key: {name}")
     return document

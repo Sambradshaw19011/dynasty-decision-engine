@@ -264,7 +264,7 @@ def main():
         if event_table == "fact_calculated_team_weekly_scores":
             raise RuntimeError("Event and scoring tables must be distinct")
         snapshot_tables = (
-            (event_table, "season"),
+            (event_table, "season_id"),
             ("fact_calculated_team_weekly_scores", "season_id"),
         )
         snapshot = {

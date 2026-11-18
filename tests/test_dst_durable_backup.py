@@ -3,8 +3,10 @@ import hashlib
 import json
 import unittest
 from unittest.mock import Mock, patch
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
-from src.ingestion.nflverse.dst_durable_backup import verify_remote_snapshot
+from src.ingestion.nflverse.dst_durable_backup import verify_remote_snapshot, upload_snapshot
 
 
 def make_document():
@@ -67,6 +69,40 @@ class DurableBackupTests(unittest.TestCase):
         document["tables"]["fact_team_fumble_events"]["rows"][0]["season_id"] = 2025
         with self.assertRaisesRegex(RuntimeError, "season"):
             self.verify(document)
+
+    def test_upload_verifies_exact_stored_bytes(self):
+        document = make_document()
+        payload = json.dumps(document).encode()
+        digest = hashlib.sha256(payload).hexdigest()
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / (digest + ".json")
+            path.write_bytes(payload)
+            client = Mock()
+            client.storage.from_.return_value.download.return_value = payload
+            with patch("src.ingestion.nflverse.dst_durable_backup.requests.post") as post:
+                post.return_value.ok = True
+                report = upload_snapshot(client, url="https://example.supabase.co",
+                                         key="test-key", bucket="nflverse-data",
+                                         snapshot_path=path)
+            self.assertEqual(report["sha256"], digest)
+            self.assertEqual(report["season"], 2026)
+            self.assertEqual(report["path"], f"dst_database_backups/2026/{digest}.json")
+
+    def test_upload_rejects_remote_mismatch(self):
+        document = make_document()
+        payload = json.dumps(document).encode()
+        digest = hashlib.sha256(payload).hexdigest()
+        with TemporaryDirectory() as folder:
+            path = Path(folder) / (digest + ".json")
+            path.write_bytes(payload)
+            client = Mock()
+            client.storage.from_.return_value.download.return_value = b"wrong"
+            with patch("src.ingestion.nflverse.dst_durable_backup.requests.post") as post:
+                post.return_value.ok = True
+                with self.assertRaisesRegex(RuntimeError, "verification failed"):
+                    upload_snapshot(client, url="https://example.supabase.co",
+                                    key="test-key", bucket="nflverse-data",
+                                    snapshot_path=path)
 
 
 if __name__ == "__main__":

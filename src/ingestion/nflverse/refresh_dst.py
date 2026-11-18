@@ -227,7 +227,10 @@ def compare_fumble_inputs(existing_bytes, generated_path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
+    parser.add_argument('--stage', action='store_true', help='Upload generated Parquet to staging only; no import or scoring')
     args = parser.parse_args()
+    if args.stage and args.execute:
+        parser.error('--stage and --execute are mutually exclusive')
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
     secret = required("PBP_INSPECT_SECRET") if args.execute else None
@@ -268,8 +271,28 @@ def main():
         if len(data) < 1000:
             raise RuntimeError("Unexpectedly small PBP file")
 
-        if not args.execute:
+        if not args.execute and not args.stage:
             print(f"DRY RUN PASS: compatible {object_path}; no storage, event, or score changes", flush=True)
+            return
+        if args.stage:
+            digest = hashlib.sha256(data).hexdigest()
+            staging_path = f"play_by_play_staging/{season}/{digest}.parquet"
+            # Content-addressed and never overwrites the production Parquet.
+            endpoint = f"{url}/storage/v1/object/{BUCKET}/{staging_path}"
+            headers = {"apikey": key, "Authorization": f"Bearer {key}",
+                       "Content-Type": "application/octet-stream", "x-upsert": "false"}
+            response = requests.post(endpoint, headers=headers, data=data, timeout=600)
+            if response.status_code == 409:
+                print("Staging object already exists; verifying bytes", flush=True)
+            else:
+                response.raise_for_status()
+            uploaded = client.storage.from_(BUCKET).download(staging_path)
+            if hashlib.sha256(uploaded).hexdigest() != digest:
+                raise RuntimeError("Staging Parquet checksum mismatch")
+            print(f"STAGING PASS: nflverse-data/{staging_path}", flush=True)
+            print(f"SHA256: {digest}", flush=True)
+            print("No production Parquet, fumble events, or D/ST scores changed", flush=True)
+            print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
 
         # Upsert only after full-source validation; existing data remains if validation fails.

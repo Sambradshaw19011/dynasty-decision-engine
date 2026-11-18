@@ -158,7 +158,11 @@ def compare_fumble_inputs(existing_bytes, generated_path):
                 indexed[key] = relevant
         return indexed
 
-    old, new = collect(old_file), collect(new_file)
+    try:
+        old, new = collect(old_file), collect(new_file)
+    finally:
+        old_file.close()
+        new_file.close()
     added, removed = set(new) - set(old), set(old) - set(new)
     changed = [key for key in old.keys() & new.keys() if old[key] != new[key]]
     print(
@@ -171,6 +175,24 @@ def compare_fumble_inputs(existing_bytes, generated_path):
             field for field in old[key] if old[key][field] != new[key][field]
         ]
         print(f"  Changed {key}: {', '.join(differences)}", flush=True)
+        if "raw_fumble_fields" in differences:
+            old_raw = old[key]["raw_fumble_fields"]
+            new_raw = new[key]["raw_fumble_fields"]
+            raw_differences = [
+                name for name in RAW_FUMBLE_FIELDS
+                if old_raw[name] != new_raw[name]
+            ]
+            print(f"    Raw fields changed: {', '.join(raw_differences)}", flush=True)
+            for name in raw_differences[:8]:
+                print(
+                    f"    {name}: existing={old_raw[name]!r}, generated={new_raw[name]!r}",
+                    flush=True,
+                )
+        if "play_description" in differences:
+            old_desc = old[key]["play_description"]
+            new_desc = new[key]["play_description"]
+            print(f"    Description: existing={old_desc!r}", flush=True)
+            print(f"                 generated={new_desc!r}", flush=True)
     for key in sorted(added)[:5]:
         print(f"  Added {key}", flush=True)
     for key in sorted(removed)[:5]:

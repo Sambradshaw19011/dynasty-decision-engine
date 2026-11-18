@@ -243,6 +243,11 @@ def main():
     args = parser.parse_args()
     if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.snapshot_db, args.execute)) > 1:
         parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, --snapshot-db, or --execute')
+    if args.execute:
+        raise RuntimeError(
+            "Production --execute is disabled until database and Parquet recovery "
+            "are coordinated and crash-recovery tested. No production changes made."
+        )
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
@@ -442,14 +447,6 @@ def main():
             else:
                 print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
-
-    # Safety gate: the legacy production path is not transactional across Storage
-    # and Postgres. Do not enable until the recovery coordinator is integrated.
-    raise RuntimeError(
-        "Production promotion disabled: atomic DB restore and Parquet recovery "
-        "are verified separately but not yet coordinated for crash-safe execution. "
-        "Use --audit-staging, --verify-backup, --verify-recovery, or --snapshot-db."
-    )
 
         # Production promotion is explicitly gated by a verified staging audit.
         # Preserve the original production bytes in immutable content-addressed

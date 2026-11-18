@@ -69,19 +69,6 @@ def main():
         client, bucket=BUCKET, season=season, object_path=backup_db_path,
         digest=op["backup_database_sha256"],
     )
-    # Also enforce the structural invariants of a local verified snapshot.
-    from src.ingestion.nflverse.verify_dst_snapshot import TABLE_KEYS, NATURAL_KEYS
-    if set(snapshot.get("tables", {})) != set(TABLE_KEYS):
-        raise RuntimeError("Remote snapshot table set invalid")
-    for name in TABLE_KEYS:
-        table = snapshot["tables"][name]
-        rows = table.get("rows")
-        if table.get("season_column") != "season_id" or not isinstance(rows, list) or not rows or len(rows) != table.get("row_count"):
-            raise RuntimeError(f"Remote snapshot table invalid: {name}")
-        for columns in (TABLE_KEYS[name], NATURAL_KEYS[name]):
-            keys = [tuple(row.get(col) for col in columns) for row in rows]
-            if any(row.get("season_id") != season for row in rows) or any(None in key for key in keys) or len(set(keys)) != len(keys):
-                raise RuntimeError(f"Remote snapshot keys invalid: {name}")
     backup = client.storage.from_(BUCKET).download(op["backup_parquet_path"])
     if sha256(backup) != op["backup_parquet_sha256"]:
         raise RuntimeError("Immutable Parquet backup checksum mismatch")

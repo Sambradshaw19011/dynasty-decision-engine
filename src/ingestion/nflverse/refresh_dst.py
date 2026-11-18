@@ -237,9 +237,10 @@ def main():
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
     parser.add_argument('--stage', action='store_true', help='Upload generated Parquet to staging only; no import or scoring')
     parser.add_argument('--audit-staging', action='store_true', help='Stage and audit generated Parquet using the deployed Edge Function')
+    parser.add_argument('--verify-backup', action='store_true', help='Verify immutable backup of current production Parquet; do not promote or score')
     args = parser.parse_args()
-    if sum((args.stage, args.audit_staging, args.execute)) > 1:
-        parser.error('--stage, --audit-staging, and --execute are mutually exclusive')
+    if sum((args.stage, args.audit_staging, args.verify_backup, args.execute)) > 1:
+        parser.error('Choose only one of --stage, --audit-staging, --verify-backup, or --execute')
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
@@ -277,6 +278,26 @@ def main():
         existing = client.storage.from_(BUCKET).download(object_path)
         build_compatible_parquet(frame, existing, path)
         compare_fumble_inputs(existing, path)
+        if args.verify_backup:
+            original_digest = hashlib.sha256(existing).hexdigest()
+            backup_path = f"play_by_play_backups/{season}/{original_digest}.parquet"
+            backup_url = f"{url}/storage/v1/object/{BUCKET}/{backup_path}"
+            backup_headers = {
+                "apikey": key, "Authorization": f"Bearer {key}",
+                "Content-Type": "application/octet-stream", "x-upsert": "false",
+            }
+            backup_response = requests.post(
+                backup_url, headers=backup_headers, data=existing, timeout=600,
+            )
+            if backup_response.status_code != 409:
+                backup_response.raise_for_status()
+            backup_bytes = client.storage.from_(BUCKET).download(backup_path)
+            if hashlib.sha256(backup_bytes).hexdigest() != original_digest:
+                raise RuntimeError("Production backup checksum mismatch")
+            print(f"BACKUP VERIFIED: {BUCKET}/{backup_path}", flush=True)
+            print(f"SHA256: {original_digest}", flush=True)
+            print("No production Parquet, fumble events, or D/ST scores changed", flush=True)
+            return
         data = path.read_bytes()
         if len(data) < 1000:
             raise RuntimeError("Unexpectedly small PBP file")

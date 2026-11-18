@@ -21,7 +21,7 @@ This pull request adds a separate GitHub Actions workflow scheduled Tuesday and 
 
 1. Refresh schedule results (required for identifying completed games).
 2. Refresh the latest five weeks of player stats (existing hash-based loader).
-3. Download the current season's full PBP, verify every completed game appears, then replace the current-season Parquet in Storage.
+3. Download the current season's full PBP, validate completed games, transform using the existing load_play_by_play.COLUMN_MAP into the exact stored 46-column schema (including raw_play_data JSON), then replace the current-season Parquet in Storage only with --execute.
 4. Invoke the Edge Function audit and atomic import.
 5. Recalculate every completed REG/POST week under the selected scoring configuration.
 6. Verify exactly two distinct D/ST rows for every finalized game.
@@ -35,3 +35,7 @@ This pull request adds a separate GitHub Actions workflow scheduled Tuesday and 
 - A current-season PBP format change, missing completed game, missing secret, or Edge Function timeout causes a failed job; this workflow does not silently claim success.
 - Check Supabase storage file limits and Edge Function execution limits for current-season file size.
 - The existing Thursday workflow still runs separately. Consider consolidating only after the new workflow is verified.
+
+## Safe format validation (required before execution)
+
+Run `python -m src.ingestion.nflverse.refresh_dst` locally with Supabase credentials. The default mode downloads the existing season Parquet and NFLverse source, verifies the existing schema against the original PostgreSQL ingestion mapping, builds a temporary 46-column Parquet, checks row count and schema, and exits **without uploading, importing, or recalculating**. It requires the existing `play_by_play/YYYY.parquet` object. The full import is enabled only with `--execute`, after review of dry-run results and Edge Function compatibility. The scheduled workflow remains in dry-run mode until the end-to-end import is independently verified. The schema check alone does not prove that the deployed Edge Function will successfully classify all fumbles.

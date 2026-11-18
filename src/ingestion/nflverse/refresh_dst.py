@@ -328,28 +328,98 @@ def main():
                 print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
 
-        # Upsert only after full-source validation; existing data remains if validation fails.
-        endpoint = f"{url}/storage/v1/object/{BUCKET}/{object_path}"
-        headers = {"apikey": key, "Authorization": f"Bearer {key}",
-                   "Content-Type": "application/octet-stream", "x-upsert": "true"}
-        response = requests.post(endpoint, headers=headers, data=data, timeout=600)
-        response.raise_for_status()
-        print(f"Uploaded {object_path}: {len(data)} bytes, {frame.height} plays", flush=True)
+        # Production promotion is explicitly gated by a verified staging audit.
+        # Preserve the original production bytes in immutable content-addressed
+        # backup storage before changing the production object.
+        digest = hashlib.sha256(data).hexdigest()
+        staging_path = f"play_by_play_staging/{season}/{digest}.parquet"
+        backup_digest = hashlib.sha256(existing).hexdigest()
+        backup_path = f"play_by_play_backups/{season}/{backup_digest}.parquet"
+        storage_headers = {"apikey": key, "Authorization": f"Bearer {key}",
+                           "Content-Type": "application/octet-stream"}
+        def put_immutable(object_name, payload, expected_digest):
+            response = requests.post(
+                f"{url}/storage/v1/object/{BUCKET}/{object_name}",
+                headers={**storage_headers, "x-upsert": "false"},
+                data=payload, timeout=600,
+            )
+            if response.status_code != 409:
+                response.raise_for_status()
+            stored = client.storage.from_(BUCKET).download(object_name)
+            if hashlib.sha256(stored).hexdigest() != expected_digest:
+                raise RuntimeError(f"Immutable storage checksum mismatch: {object_name}")
 
-    endpoint = f"{url}/functions/v1/import-pbp-fumbles"
-    headers = {"apikey": key, "Authorization": f"Bearer {key}",
-               "x-inspection-secret": secret, "Content-Type": "application/json"}
-    # Do not score until season replacement succeeds.
-    for payload in (
-        {"season": season, "mode": "audit"},
-        {"season": season, "mode": "import", "confirm": "IMPORT_VERIFIED_EVENTS"},
-    ):
-        response = requests.post(endpoint, headers=headers, json=payload, timeout=600)
+        put_immutable(staging_path, data, digest)
+        endpoint = f"{url}/functions/v1/import-pbp-fumbles"
+        audit_headers = {**storage_headers, "x-inspection-secret": secret}
+        def audit_file(object_name):
+            response = requests.post(
+                endpoint, headers=audit_headers,
+                json={"season": season, "mode": "audit", "staging_path": object_name},
+                timeout=600,
+            )
+            response.raise_for_status()
+            result = response.json()
+            if (result.get("success") is not True
+                    or result.get("mode") != "audit"
+                    or result.get("source") != f"{BUCKET}/{object_name}"
+                    or result.get("parquet_rows") != frame.height
+                    or result.get("issues_count") != 0
+                    or result.get("unclassified_recoveries") != 0):
+                raise RuntimeError(f"Staging audit failed: {result}")
+            return result
+
+        staged_report = audit_file(staging_path)
+        print(f"STAGING AUDIT PASS: {staged_report['events_prepared']} events", flush=True)
+        put_immutable(backup_path, existing, backup_digest)
+        print(f"PRODUCTION BACKUP VERIFIED: {BUCKET}/{backup_path}", flush=True)
+        # Re-read immediately before replacement to detect concurrent changes.
+        current = client.storage.from_(BUCKET).download(object_path)
+        if hashlib.sha256(current).hexdigest() != backup_digest:
+            raise RuntimeError("Production Parquet changed during refresh; refusing promotion")
+        response = requests.post(
+            f"{url}/storage/v1/object/{BUCKET}/{object_path}",
+            headers={**storage_headers, "x-upsert": "true"},
+            data=data, timeout=600,
+        )
         response.raise_for_status()
-        body = response.json()
-        if body.get("success") is not True:
-            raise RuntimeError(f"Fumble {payload['mode']} failed: {body}")
-        print(f"Fumble {payload['mode']} succeeded", flush=True)
+        promoted = client.storage.from_(BUCKET).download(object_path)
+        if hashlib.sha256(promoted).hexdigest() != digest:
+            raise RuntimeError(
+                f"Production promotion checksum mismatch. Verified backup: {backup_path}"
+            )
+        print(f"PROMOTION PASS: {object_path}; rollback source: {backup_path}", flush=True)
+
+    # Production classification must match the exact staged event distribution.
+    response = requests.post(
+        endpoint, headers=audit_headers,
+        json={"season": season, "mode": "audit"}, timeout=600,
+    )
+    response.raise_for_status()
+    production_report = response.json()
+    compare_keys = (
+        "classifier_version", "parquet_rows", "fumble_plays",
+        "credited_recoveries", "safety_plays", "invalidated_plays",
+        "events_prepared", "recovered_events", "categories_and_outcomes",
+        "unknown_events", "unclassified_recoveries", "issues_count",
+    )
+    if (production_report.get("success") is not True
+            or any(production_report.get(k) != staged_report.get(k) for k in compare_keys)):
+        raise RuntimeError(
+            "Production audit does not match staging audit; fumble import not attempted. "
+            f"Verified backup: {backup_path}"
+        )
+    response = requests.post(
+        endpoint, headers=audit_headers,
+        json={"season": season, "mode": "import", "confirm": "IMPORT_VERIFIED_EVENTS"},
+        timeout=600,
+    )
+    response.raise_for_status()
+    import_result = response.json()
+    if (import_result.get("success") is not True
+            or import_result.get("imported") is None):
+        raise RuntimeError(f"Fumble import failed: {import_result}")
+    print(f"Fumble import succeeded: {import_result.get('imported')}", flush=True)
 
     for season_type in ("REG", "POST"):
         weeks = sorted({int(g["week"]) for g in final if g["season_type"] == season_type})

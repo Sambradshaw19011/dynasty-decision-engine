@@ -24,7 +24,7 @@ NATURAL_KEYS = {
 def verify_snapshot(path: Path) -> dict:
     if not path.is_file():
         raise RuntimeError(f"Snapshot not found: {path}")
-    if not re.fullmatch(r"[0-9a-f]{64}\\.json", path.name):
+    if not re.fullmatch(r"[0-9a-f]{64}\.json", path.name):
         raise RuntimeError("Snapshot filename must be its SHA256 digest")
     payload = path.read_bytes()
     digest = hashlib.sha256(payload).hexdigest()

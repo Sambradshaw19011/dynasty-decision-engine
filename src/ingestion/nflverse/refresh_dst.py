@@ -239,9 +239,10 @@ def main():
     parser.add_argument('--audit-staging', action='store_true', help='Stage and audit generated Parquet using the deployed Edge Function')
     parser.add_argument('--verify-backup', action='store_true', help='Verify immutable backup of current production Parquet; do not promote or score')
     parser.add_argument('--verify-recovery', action='store_true', help='Simulate restoring verified production backup to an isolated staging object; no production writes')
+    parser.add_argument('--snapshot-db', action='store_true', help='Export and verify current-season D/ST event and score rows locally; no database writes')
     args = parser.parse_args()
-    if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.execute)) > 1:
-        parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, or --execute')
+    if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.snapshot_db, args.execute)) > 1:
+        parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, --snapshot-db, or --execute')
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
@@ -254,6 +255,59 @@ def main():
         raise RuntimeError(f"Expected one current season; found {len(seasons)}")
     season = int(seasons[0]["season_id"])
     print(f"Refreshing {season}", flush=True)
+    if args.snapshot_db:
+        # The fumble event table must be configured explicitly; guessing its
+        # name could silently omit the data we need to preserve.
+        event_table = required("DST_FUMBLE_EVENTS_TABLE")
+        if not re.fullmatch(r"[a-z][a-z0-9_]*", event_table):
+            raise RuntimeError("DST_FUMBLE_EVENTS_TABLE must be a simple table identifier")
+        if event_table == "fact_calculated_team_weekly_scores":
+            raise RuntimeError("Event and scoring tables must be distinct")
+        snapshot_tables = (
+            (event_table, "season"),
+            ("fact_calculated_team_weekly_scores", "season_id"),
+        )
+        snapshot = {
+            "season": season,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "tables": {},
+        }
+        for table_name, season_column in snapshot_tables:
+            rows = all_rows(client, table_name, "*", {season_column: season})
+            # Sort canonically for reproducible digest; preserve every column.
+            rows.sort(key=lambda row: json.dumps(row, sort_keys=True, default=str))
+            snapshot["tables"][table_name] = {
+                "season_column": season_column,
+                "row_count": len(rows),
+                "rows": rows,
+            }
+            print(f"SNAPSHOT READ: {table_name} ({len(rows):,} rows)", flush=True)
+        snapshot_bytes = json.dumps(
+            snapshot, ensure_ascii=False, sort_keys=True, indent=2, default=str,
+        ).encode("utf-8")
+        snapshot_dir = Path("backups") / "dst_database" / str(season)
+        snapshot_dir.mkdir(parents=True, exist_ok=True)
+        snapshot_digest = hashlib.sha256(snapshot_bytes).hexdigest()
+        snapshot_path = snapshot_dir / f"{snapshot_digest}.json"
+        if snapshot_path.exists():
+            if hashlib.sha256(snapshot_path.read_bytes()).hexdigest() != snapshot_digest:
+                raise RuntimeError("Existing database snapshot checksum mismatch")
+        else:
+            with snapshot_path.open("xb") as output:
+                output.write(snapshot_bytes)
+        stored = snapshot_path.read_bytes()
+        if hashlib.sha256(stored).hexdigest() != snapshot_digest:
+            raise RuntimeError("Database snapshot checksum mismatch")
+        verified = json.loads(stored)
+        for table_name, _ in snapshot_tables:
+            table = verified["tables"][table_name]
+            if len(table["rows"]) != table["row_count"]:
+                raise RuntimeError(f"Snapshot row-count mismatch: {table_name}")
+        print(f"DATABASE SNAPSHOT VERIFIED: {snapshot_path}", flush=True)
+        print(f"SHA256: {snapshot_digest}", flush=True)
+        print("READ-ONLY DATABASE SNAPSHOT PASS: no production changes", flush=True)
+        print("This is an export, not an implemented database rollback.", flush=True)
+        return
 
     games = all_rows(client, "dim_game",
                      "game_id,week,season_type,game_status,home_score,away_score",

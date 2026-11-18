@@ -216,24 +216,32 @@ def compare_fumble_inputs(existing_bytes, generated_path):
     for key in sorted(removed)[:5]:
         print(f"  Removed {key}", flush=True)
     print(f"Description-only non-fumble updates: {len(description_only)}; blocking changes: {len(blocking)}", flush=True)
-    if added or removed or blocking:
+    # New weeks naturally add play IDs. Their contents must be validated by
+    # the staging classifier before any production promotion.
+    if removed or blocking:
         raise RuntimeError(
-            "Fumble inputs differ; review changes before uploading. "
-            "This does not necessarily indicate an error."
+            "Existing plays were removed or fumble-sensitive inputs changed; "
+            "do not promote until validated. "
+            f"removed={len(removed)} blocking={len(blocking)}"
         )
-    print("FUMBLE INPUT COMPARISON PASS: no blocking fumble input changes", flush=True)
+    print(
+        f"FUMBLE INPUT COMPARISON PASS: {len(added)} new plays; "
+        "no removed plays or blocking changes",
+        flush=True,
+    )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
     parser.add_argument('--stage', action='store_true', help='Upload generated Parquet to staging only; no import or scoring')
+    parser.add_argument('--audit-staging', action='store_true', help='Stage and audit generated Parquet using the deployed Edge Function')
     args = parser.parse_args()
-    if args.stage and args.execute:
-        parser.error('--stage and --execute are mutually exclusive')
+    if sum((args.stage, args.audit_staging, args.execute)) > 1:
+        parser.error('--stage, --audit-staging, and --execute are mutually exclusive')
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
-    secret = required("PBP_INSPECT_SECRET") if args.execute else None
+    secret = required("PBP_INSPECT_SECRET") if (args.execute or args.audit_staging) else None
     settings_id = required("DST_SCORING_SETTINGS_ID") if args.execute else None
     client = create_client(url, key)
 
@@ -271,10 +279,10 @@ def main():
         if len(data) < 1000:
             raise RuntimeError("Unexpectedly small PBP file")
 
-        if not args.execute and not args.stage:
+        if not args.execute and not args.stage and not args.audit_staging:
             print(f"DRY RUN PASS: compatible {object_path}; no storage, event, or score changes", flush=True)
             return
-        if args.stage:
+        if args.stage or args.audit_staging:
             digest = hashlib.sha256(data).hexdigest()
             staging_path = f"play_by_play_staging/{season}/{digest}.parquet"
             # Content-addressed and never overwrites the production Parquet.
@@ -292,7 +300,30 @@ def main():
             print(f"STAGING PASS: nflverse-data/{staging_path}", flush=True)
             print(f"SHA256: {digest}", flush=True)
             print("No production Parquet, fumble events, or D/ST scores changed", flush=True)
-            print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
+            if args.audit_staging:
+                audit_url = f"{url}/functions/v1/import-pbp-fumbles"
+                audit_headers = {
+                    "apikey": key, "Authorization": f"Bearer {key}",
+                    "x-inspection-secret": secret, "Content-Type": "application/json",
+                }
+                audit = requests.post(
+                    audit_url, headers=audit_headers,
+                    json={"season": season, "mode": "audit", "staging_path": staging_path},
+                    timeout=600,
+                )
+                audit.raise_for_status()
+                report = audit.json()
+                print(json.dumps(report, indent=2), flush=True)
+                if (report.get("success") is not True
+                        or report.get("mode") != "audit"
+                        or report.get("source") != f"{BUCKET}/{staging_path}"
+                        or report.get("parquet_rows") != frame.height
+                        or report.get("issues_count") != 0
+                        or report.get("unclassified_recoveries") != 0):
+                    raise RuntimeError("Staging classifier audit did not pass")
+                print("STAGING CLASSIFIER AUDIT PASS: no production changes", flush=True)
+            else:
+                print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
 
         # Upsert only after full-source validation; existing data remains if validation fails.

@@ -43,6 +43,20 @@ class ImportAndScoringTests(unittest.TestCase):
         self.assertEqual(result["imported"], 371)
         self.assertEqual([x["mode"] for x in calls], ["audit", "audit", "import"])
 
+    def test_import_count_mismatch_blocks_completion(self):
+        post, calls = self.responses()
+        def wrong_count(*args, **kwargs):
+            response = post(*args, **kwargs)
+            if kwargs["json"]["mode"] == "import":
+                return SimpleNamespace(raise_for_status=lambda: None,
+                                       json=lambda: {"success": True, "imported": 370})
+            return response
+        with patch("src.ingestion.nflverse.dst_production_stages.requests.post",
+                   side_effect=wrong_count):
+            with self.assertRaisesRegex(RuntimeError, "Fumble import count mismatch"):
+                import_verified_fumbles(**self.kwargs)
+        self.assertEqual(len(calls), 3)
+
     def test_audit_difference_prevents_import(self):
         post, calls = self.responses(production_changes={"events_prepared": 370})
         with patch("src.ingestion.nflverse.dst_production_stages.requests.post",

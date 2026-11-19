@@ -75,6 +75,17 @@ class RecoveryExecutionTests(unittest.TestCase):
                               url="https://example.supabase.co", key="test-key")
             return post
 
+    def test_prepared_operation_refuses_restore(self):
+        self.op["status"] = "prepared"
+        with patch("src.ingestion.nflverse.recover_dst_operation.verify_remote_snapshot") as verify:
+            with self.assertRaisesRegex(RuntimeError, "automatic database restore is prohibited"):
+                recover_operation(
+                    self.client, operation_id="test-id", execute=True,
+                    url="https://example.supabase.co", key="test-key")
+            verify.assert_not_called()
+        self.client.rpc.assert_not_called()
+        self.assertEqual(self.transitions, [])
+
     def test_successful_restore_and_journal_completion(self):
         post = self.run_recovery()
         self.assertEqual(self.production, self.backup)

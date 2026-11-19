@@ -87,3 +87,30 @@ class RefreshJournal:
                 f"Refresh failed at {self.status}; recovery completed. "
                 f"Operation {self.operation_id}."
             ) from original
+
+
+def begin_verified_refresh(client, *, season: int, staged_digest: str,
+                           backup_parquet_digest: str,
+                           backup_database_digest: str) -> RefreshJournal:
+    """Verify all immutable artifacts before acquiring the season journal lease.
+
+    This is the only supported entry point for a production coordinator.
+    A separate runner must supply stage actions and recovery behavior.
+    """
+    from src.ingestion.nflverse.verify_dst_refresh_artifacts import verify_artifacts
+
+    report = verify_artifacts(
+        client, season=season, staged_digest=staged_digest,
+        backup_parquet_digest=backup_parquet_digest,
+        backup_database_digest=backup_database_digest,
+    )
+    paths = report["paths"]
+    return RefreshJournal.begin(
+        client, season=season,
+        backup_parquet_path=paths["backup_parquet"],
+        backup_parquet_sha256=backup_parquet_digest,
+        backup_database_sha256=backup_database_digest,
+        backup_database_path=paths["backup_database"],
+        staged_parquet_path=paths["staging"],
+        staged_parquet_sha256=staged_digest,
+    )

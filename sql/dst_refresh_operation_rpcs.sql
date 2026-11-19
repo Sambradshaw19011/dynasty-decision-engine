@@ -65,7 +65,7 @@ create or replace function public.calculate_team_weekly_scores(
   p_scoring_settings_id uuid, p_season integer, p_week integer,
   p_season_type text default 'REG', p_engine_version text default 'def-1.4.0',
   p_operation_id uuid default null
-) returns uuid language plpgsql set search_path = ''
+) returns uuid language plpgsql security definer set search_path = ''
 as $$
 begin
   perform public.dst_claim_refresh_operation(p_operation_id, p_season, 'scoring');

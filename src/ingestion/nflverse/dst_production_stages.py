@@ -103,7 +103,7 @@ def import_verified_fumbles(*, season: int, staged_digest: str,
 
 
 def score_completed_dst_weeks(client, *, season: int, settings_id: str,
-                              completed_games: list[dict]) -> list[dict]:
+                              operation_id: str, completed_games: list[dict]) -> list[dict]:
     """Recalculate every completed regular/postseason week for the league."""
     if not completed_games:
         raise RuntimeError("No completed games to score")
@@ -119,6 +119,7 @@ def score_completed_dst_weeks(client, *, season: int, settings_id: str,
                 "p_season": season, "p_week": week,
                 "p_season_type": season_type,
                 "p_engine_version": "def-1.4.1-weekly",
+                "p_operation_id": operation_id,
             }).execute().data
             if not data:
                 raise RuntimeError(f"Scoring failed: {season_type} week {week}")

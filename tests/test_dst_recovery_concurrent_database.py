@@ -55,7 +55,7 @@ class ConcurrentDatabaseRecoveryTests(unittest.TestCase):
                    "src.ingestion.nflverse.recover_dst_operation.count_rows",
                    side_effect=[1, 1]), patch(
                    "src.ingestion.nflverse.refresh_dst.all_rows", side_effect=original):
-            with self.assertRaisesRegex(RuntimeError, "restore unconfirmed"):
+            with self.assertRaisesRegex(RuntimeError, "Journal transition not confirmed"):
                 self.client.rpc.return_value.execute.return_value.data = {}
                 recover_operation(self.client, operation_id="test-op", execute=True,
                                   url="https://example.supabase.co", key="key")

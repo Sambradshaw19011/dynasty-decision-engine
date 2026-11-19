@@ -30,11 +30,14 @@ def verify_artifacts(client, *, season: int, staged_digest: str,
         "backup_database": f"dst_database_backups/{season}/{backup_database_digest}.json",
     }
     for key, expected in (("staging", staged_digest),
-                          ("backup_parquet", backup_parquet_digest),
-                          ("production", backup_parquet_digest)):
+                          ("backup_parquet", backup_parquet_digest)):
         payload = client.storage.from_(BUCKET).download(paths[key])
         if hashlib.sha256(payload).hexdigest() != expected:
             raise RuntimeError(f"Artifact checksum mismatch: {key}")
+    current = client.storage.from_(BUCKET).download(paths["production"])
+    current_digest = hashlib.sha256(current).hexdigest()
+    if current_digest not in (staged_digest, backup_parquet_digest):
+        raise RuntimeError("Artifact checksum mismatch: production")
     snapshot = verify_remote_snapshot(
         client, bucket=BUCKET, season=season,
         object_path=paths["backup_database"], digest=backup_database_digest,

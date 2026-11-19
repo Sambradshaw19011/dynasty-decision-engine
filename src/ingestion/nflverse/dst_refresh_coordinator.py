@@ -114,3 +114,24 @@ def begin_verified_refresh(client, *, season: int, staged_digest: str,
         staged_parquet_path=paths["staging"],
         staged_parquet_sha256=staged_digest,
     )
+
+
+def run_verified_refresh(client, *, season: int, staged_digest: str,
+                         backup_parquet_digest: str, backup_database_digest: str,
+                         promote: Callable, import_events: Callable,
+                         score: Callable, verify: Callable,
+                         recover: Callable) -> str:
+    """Run the production stages under one durable, verified journal.
+
+    The caller owns each concrete action and must supply a recovery function
+    that fully restores database and Parquet and closes the journal. This
+    function does not bypass refresh_dst.py's production execution gate.
+    """
+    journal = begin_verified_refresh(
+        client, season=season, staged_digest=staged_digest,
+        backup_parquet_digest=backup_parquet_digest,
+        backup_database_digest=backup_database_digest,
+    )
+    journal.run(promote=promote, import_events=import_events, score=score,
+                verify=verify, recover=recover)
+    return journal.operation_id

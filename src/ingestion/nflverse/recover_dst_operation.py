@@ -48,8 +48,20 @@ def main():
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
     client = create_client(url, key)
+    recover_operation(client, operation_id=args.operation_id, execute=args.execute,
+                      url=url, key=key)
+
+
+def recover_operation(client, *, operation_id: str, execute: bool = False,
+                      url: str = "", key: str = "") -> None:
+    """Preflight by default; execution requires an explicitly authorized caller.
+
+    The caller must ensure the failed writer is stopped before execute=True.
+    """
+    if execute and (not url or not key):
+        raise RuntimeError("Recovery execution requires Supabase URL and service key")
     matches = client.table("dst_refresh_operations").select("*").eq(
-        "operation_id", args.operation_id
+        "operation_id", operation_id
     ).execute().data or []
     if len(matches) != 1:
         raise RuntimeError("Recovery operation not found")
@@ -83,12 +95,12 @@ def main():
     # The actual restore RPC verifies every row within its transaction.
     counts = {table: count_rows(client, table, season) for table in TABLES}
     print(json.dumps({
-        "operation_id": args.operation_id, "status": op["status"],
+        "operation_id": operation_id, "status": op["status"],
         "season": season, "production_parquet_sha256": current_digest,
         "backup_parquet_sha256": op["backup_parquet_sha256"],
         "snapshot_path": backup_db_path, "current_database_rows": counts,
     }, indent=2), flush=True)
-    if not args.execute:
+    if not execute:
         print("PREFLIGHT PASS: no production writes. Recovery requires --execute and confirmation.")
         return
 
@@ -96,7 +108,7 @@ def main():
     # transition is compare-and-swap; concurrent nonparticipating writers are
     # NOT protected by this protocol.
     if op["status"] != "recovering":
-        advance(client, args.operation_id, op["status"], "recovering")
+        advance(client, operation_id, op["status"], "recovering")
     try:
         # Restore database first. If it fails, production Parquet remains
         # untouched and the operation remains blocked for investigation.
@@ -129,12 +141,12 @@ def main():
             expected = snapshot["tables"][table]["row_count"]
             if count_rows(client, table, season) != expected:
                 raise RuntimeError(f"Restored database row count mismatch: {table}")
-        advance(client, args.operation_id, "recovering", "recovered",
+        advance(client, operation_id, "recovering", "recovered",
                 {"recovery": "verified_database_and_parquet"})
         print("RECOVERY VERIFIED: database and production Parquet restored; journal closed")
     except BaseException as exc:
         try:
-            advance(client, args.operation_id, "recovering", "recovery_failed",
+            advance(client, operation_id, "recovering", "recovery_failed",
                     {"recovery_error": str(exc)[:1500]})
         except Exception:
             print("CRITICAL: unable to mark journal recovery_failed", flush=True)

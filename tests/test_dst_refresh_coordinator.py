@@ -40,8 +40,8 @@ class CoordinatorTests(unittest.TestCase):
         actions = []
         journal.run(
             promote=lambda: actions.append("promote"),
-            import_events=lambda: actions.append("import"),
-            score=lambda: actions.append("score"),
+            import_events=lambda op: actions.append("import"),
+            score=lambda op: actions.append("score"),
             verify=lambda: actions.append("verify"),
             recover=lambda _: self.fail("unexpected recovery"),
         )
@@ -64,8 +64,8 @@ class CoordinatorTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "recovery completed"):
                     journal.run(
                         promote=lambda: action("promote"),
-                        import_events=lambda: action("import"),
-                        score=lambda: action("score"),
+                        import_events=lambda op: action("import"),
+                        score=lambda op: action("score"),
                         verify=lambda: action("verify"),
                         recover=lambda op: recovered.append(op),
                     )
@@ -87,7 +87,7 @@ class CoordinatorTests(unittest.TestCase):
         called = []
         with self.assertRaisesRegex(RuntimeError, "remains prepared and blocked"):
             journal.run(promote=lambda: called.append("promote"),
-                        import_events=lambda: None, score=lambda: None,
+                        import_events=lambda op: None, score=lambda op: None,
                         verify=lambda: None,
                         recover=lambda _: called.append("recover"))
         self.assertEqual(called, [])

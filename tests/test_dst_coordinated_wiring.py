@@ -12,7 +12,7 @@ class CoordinatedWiringTests(unittest.TestCase):
             season=2026, staged_digest="a" * 64,
             backup_parquet_digest="b" * 64,
             backup_database_digest="c" * 64,
-            expected_pbp_rows=26246, settings_id=1,
+            expected_pbp_rows=26246, settings_id="00000000-0000-0000-0000-000000000002",
             completed_games=[{"game_id": "g", "season_type": "REG", "week": 1}],
             url="https://example.supabase.co", key="key",
             inspection_secret="secret",
@@ -24,8 +24,8 @@ class CoordinatedWiringTests(unittest.TestCase):
             self.assertIs(client, self.client)
             self.assertEqual(kwargs["season"], 2026)
             kwargs["promote"]()
-            kwargs["import_events"]()
-            kwargs["score"]()
+            kwargs["import_events"]("test-operation")
+            kwargs["score"]("test-operation")
             kwargs["verify"]()
             kwargs["recover"]("test-operation")
             return "test-operation"

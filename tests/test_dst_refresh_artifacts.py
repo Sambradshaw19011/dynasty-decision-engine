@@ -5,7 +5,16 @@ import unittest
 from unittest.mock import Mock, patch
 
 from src.ingestion.nflverse.verify_dst_refresh_artifacts import verify_artifacts
-from tests.test_dst_durable_backup import make_document
+def make_document():
+    return {"season": 2026, "tables": {
+        "fact_team_fumble_events": {"season_column": "season_id", "row_count": 1,
+            "rows": [{"season_id": 2026, "fumble_event_id": 1, "game_id": "g",
+                      "play_id": 1, "recovery_sequence": 1}]},
+        "fact_calculated_team_weekly_scores": {"season_column": "season_id",
+            "row_count": 1, "rows": [{"season_id": 2026,
+            "calculated_team_score_id": 1, "scoring_settings_id": 1,
+            "game_id": "g", "team_code": "SF"}]},
+    }}
 
 
 class ArtifactGateTests(unittest.TestCase):

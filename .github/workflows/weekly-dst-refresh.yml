@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.11"
           cache: pip
       - name: Install dependencies
         run: |
@@ -36,4 +36,4 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           PBP_INSPECT_SECRET: ${{ secrets.PBP_INSPECT_SECRET }}
           DST_SCORING_SETTINGS_ID: ${{ secrets.DST_SCORING_SETTINGS_ID }}
-        run: python -m src.ingestion.nflverse.refresh_dst
+        run: python -m src.ingestion.nflverse.weekly_dst_automation

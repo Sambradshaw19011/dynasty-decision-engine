@@ -1,0 +1,43 @@
+name: D/ST Safety Test Suite
+
+on:
+  push:
+    branches:
+      - automation/weekly-dst-refresh-2026
+  pull_request:
+    paths:
+      - 'src/ingestion/nflverse/**'
+      - 'tests/test_dst_*.py'
+      - '.github/workflows/dst-safety-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dst-safety-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-tests:
+    name: D/ST offline tests (no Supabase credentials)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_URL: ''
+      SUPABASE_SERVICE_ROLE_KEY: ''
+      PBP_INSPECT_SECRET: ''
+      DST_SCORING_SETTINGS_ID: ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyarrow
+      - name: Run all offline D/ST safety suites
+        run: |
+          python -m unittest discover -s tests -p 'test_dst_*.py' -v

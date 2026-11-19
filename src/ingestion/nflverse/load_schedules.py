@@ -17,6 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 BATCH_SIZE = 500
+FIRST_SEASON_TO_LOAD = 2005
 
 VALID_GAME_TYPES = {"REG", "PRE", "WC", "DIV", "CON", "SB"}
 
@@ -99,8 +100,9 @@ def load_source_schedules():
     print("Downloading NFLverse schedules...")
 
     df = nfl.load_schedules(seasons=True)
+    df = df.filter(df["season"] >= FIRST_SEASON_TO_LOAD)
 
-    print(f"Retrieved {df.height:,} games.")
+    print(f"Retrieved {df.height:,} games from {FIRST_SEASON_TO_LOAD} onward.")
 
     return df.to_dicts()
 

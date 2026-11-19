@@ -61,7 +61,7 @@ def main() -> None:
     # guess among previous weekly staging objects.
     match = re.search(
         r"^STAGING PASS: nflverse-data/play_by_play_staging/"
-        + str(season) + r"/([0-9a-f]{64})\\.parquet$",
+        + str(season) + r"/([0-9a-f]{64})\.parquet$",
         audit_output, flags=re.MULTILINE,
     )
     if not match or "STAGING CLASSIFIER AUDIT PASS" not in audit_output:

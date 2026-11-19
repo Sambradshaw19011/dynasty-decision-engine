@@ -286,9 +286,9 @@ def main():
         if not all((args.staged_sha256, args.backup_parquet_sha256, args.backup_database_sha256)):
             parser.error('--execute requires all three verified --*-sha256 arguments')
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
-    url = required("SUPABASE_URL").rstrip("/")
-    key = required("SUPABASE_SERVICE_ROLE_KEY")
-    secret = required("PBP_INSPECT_SECRET") if (args.execute or args.audit_staging) else None
+    url = required("SUPABASE_URL").strip().rstrip("/")
+    key = required("SUPABASE_SERVICE_ROLE_KEY").strip()
+    secret = required("PBP_INSPECT_SECRET").strip() if (args.execute or args.audit_staging) else None
     settings_id = required("DST_SCORING_SETTINGS_ID") if args.execute else None
     client = create_client(url, key)
 

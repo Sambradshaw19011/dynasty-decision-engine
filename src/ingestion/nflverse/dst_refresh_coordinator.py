@@ -76,6 +76,15 @@ class RefreshJournal:
                 action()
             self.advance("completed")
         except Exception as original:
+            # If the first journal transition was rejected, no stage action
+            # could have run. Do not restore a database that we never changed:
+            # unrelated writers may have committed after the backup.
+            # Leave the prepared journal unresolved for investigation.
+            if self.status == "prepared":
+                raise RuntimeError(
+                    f"Refresh could not enter promoting; no production stage ran. "
+                    f"Operation {self.operation_id} remains prepared and blocked."
+                ) from original
             try:
                 recover(self.operation_id)
             except Exception as recovery_error:

@@ -18,12 +18,37 @@ from src.ingestion.nflverse.dst_durable_backup import upload_snapshot
 ROOT = Path(__file__).resolve().parents[3]
 
 
+
 def run(*args: str) -> str:
+    command = [
+        sys.executable,
+        "-m",
+        "src.ingestion.nflverse.refresh_dst",
+        *args,
+    ]
+
     result = subprocess.run(
-        [sys.executable, "-m", "src.ingestion.nflverse.refresh_dst", *args],
-        cwd=ROOT, check=True, capture_output=True, text=True,
+        command,
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
     )
-    print(result.stdout, flush=True)
+
+    if result.stdout:
+        print(result.stdout, flush=True)
+
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, flush=True)
+
+    if result.returncode != 0:
+        raise subprocess.CalledProcessError(
+            result.returncode,
+            command,
+            output=result.stdout,
+            stderr=result.stderr,
+        )
+
     return result.stdout
 
 

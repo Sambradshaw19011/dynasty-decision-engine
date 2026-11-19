@@ -50,4 +50,5 @@ def test_recovery_passes_operation_id_to_fenced_restore_rpc():
     assert args.args[0] == "restore_dst_database_snapshot"
     assert args.args[1]["p_operation_id"] == operation_id
     advance.assert_called_once()
-    assert advance.call_args.args[2:] == ("recovering", "recovered")
+    assert advance.call_args.args[2:4] == ("recovering", "recovered")
+    assert advance.call_args.args[4] == {"recovery": "verified_database_and_parquet"}

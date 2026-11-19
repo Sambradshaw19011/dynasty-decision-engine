@@ -283,9 +283,13 @@ def main():
         if not all((args.staged_sha256, args.backup_parquet_sha256, args.backup_database_sha256)):
             parser.error('--coordinator-preflight requires all three --*-sha256 arguments')
     if args.execute:
+        if not all((args.staged_sha256, args.backup_parquet_sha256, args.backup_database_sha256)):
+            parser.error('--execute requires all three verified --*-sha256 arguments')
         raise RuntimeError(
-            "Production --execute remains disabled: coordinated recovery and "
-            "failure-injection testing are not complete. No production changes made."
+            'Production --execute is not authorized: the import and scoring RPCs '
+            'do not yet enforce an exclusive database writer fence. '
+            'The coordinator is implemented, but enabling it now could overwrite '
+            'unrelated database changes during recovery. No production changes made.'
         )
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")

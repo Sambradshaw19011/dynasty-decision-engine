@@ -135,14 +135,22 @@ def verify_completed_dst_scores(client, *, season: int, settings_id: int,
     scores = all_rows(client, "fact_calculated_team_weekly_scores",
                       "game_id,team_code,season_type,week",
                       {"season_id": season, "scoring_settings_id": settings_id})
+    expected = {game["game_id"] for game in completed_games}
+    if len(expected) != len(completed_games):
+        raise RuntimeError("Duplicate completed game IDs in verification input")
     by_game = {}
     for row in scores:
-        by_game.setdefault(row["game_id"], []).append(row["team_code"])
+        game_id, team = row.get("game_id"), row.get("team_code")
+        if game_id not in expected:
+            raise RuntimeError(f"Unexpected D/ST score game: {game_id}")
+        if not team or not isinstance(team, str):
+            raise RuntimeError(f"Missing D/ST team code for game {game_id}")
+        by_game.setdefault(game_id, []).append(team)
     failures = [
-        game["game_id"] for game in completed_games
-        if len(by_game.get(game["game_id"], [])) != 2
-        or len(set(by_game.get(game["game_id"], []))) != 2
+        game_id for game_id in sorted(expected)
+        if len(by_game.get(game_id, [])) != 2
+        or len(set(by_game.get(game_id, []))) != 2
     ]
     if failures:
         raise RuntimeError(f"D/ST score coverage failed for {len(failures)} games: {failures[:8]}")
-    return len(completed_games)
+    return len(expected)

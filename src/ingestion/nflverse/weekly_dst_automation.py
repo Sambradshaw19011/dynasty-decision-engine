@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -17,11 +18,13 @@ from src.ingestion.nflverse.dst_durable_backup import upload_snapshot
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def run(*args: str) -> None:
-    subprocess.run(
+def run(*args: str) -> str:
+    result = subprocess.run(
         [sys.executable, "-m", "src.ingestion.nflverse.refresh_dst", *args],
-        cwd=ROOT, check=True,
+        cwd=ROOT, check=True, capture_output=True, text=True,
     )
+    print(result.stdout, flush=True)
+    return result.stdout
 
 
 def main() -> None:
@@ -52,26 +55,18 @@ def main() -> None:
 
     # Generates, stages and audits the latest NFLverse full-season PBP.
     # Does not modify production scores or the production PBP object.
-    run("--audit-staging")
+    audit_output = run("--audit-staging")
 
-    # Stage name is content-addressed, but refresh_dst currently does not
-    # expose the digest in a machine-readable result. Identify it from the
-    # objects present only if the candidate is unambiguous.
-    staged = storage.list(f"play_by_play_staging/{season}")
-    candidates = [
-        item["name"] for item in staged
-        if isinstance(item.get("name"), str) and item["name"].endswith(".parquet")
-    ]
-    # A scheduled run must not guess which of multiple old staging files
-    # corresponds to the just-audited PBP. Require explicit discovery.
-    if len(candidates) != 1:
-        raise RuntimeError(
-            "Cannot safely select staged artifact from multiple historical objects. "
-            "Scheduled promotion blocked; staging audit completed."
-        )
-    staged_sha = candidates[0][:-8]
-    if len(staged_sha) != 64 or any(c not in "0123456789abcdef" for c in staged_sha):
-        raise RuntimeError("Invalid staged object name")
+    # Parse the exact digest printed by the successful staging run; never
+    # guess among previous weekly staging objects.
+    match = re.search(
+        r"^STAGING PASS: nflverse-data/play_by_play_staging/"
+        + str(season) + r"/([0-9a-f]{64})\\.parquet$",
+        audit_output, flags=re.MULTILINE,
+    )
+    if not match or "STAGING CLASSIFIER AUDIT PASS" not in audit_output:
+        raise RuntimeError("Audited staging digest was not confirmed")
+    staged_sha = match.group(1)
     staged_data = storage.download(f"play_by_play_staging/{season}/{staged_sha}.parquet")
     if hashlib.sha256(staged_data).hexdigest() != staged_sha:
         raise RuntimeError("Staged PBP checksum mismatch")

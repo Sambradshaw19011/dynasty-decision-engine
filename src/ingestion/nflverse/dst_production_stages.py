@@ -47,7 +47,7 @@ def promote_verified_parquet(client, *, season: int, staged_digest: str,
 
 
 def import_verified_fumbles(*, season: int, staged_digest: str,
-                            expected_rows: int, url: str, key: str,
+                            expected_rows: int, operation_id: str, url: str, key: str,
                             inspection_secret: str) -> dict:
     """Require staging and production audits to agree before import."""
     if not isinstance(staged_digest, str) or len(staged_digest) != 64 or any(
@@ -87,6 +87,7 @@ def import_verified_fumbles(*, season: int, staged_digest: str,
     if any(staged.get(field) != production.get(field) for field in fields):
         raise RuntimeError("Production fumble audit differs from staging")
     imported = call({"season": season, "mode": "import",
+                     "operation_id": operation_id,
                      "confirm": "IMPORT_VERIFIED_EVENTS"})
     if imported.get("success") is not True or imported.get("imported") is None:
         raise RuntimeError(f"Fumble import unconfirmed: {imported}")
@@ -101,7 +102,7 @@ def import_verified_fumbles(*, season: int, staged_digest: str,
     return imported
 
 
-def score_completed_dst_weeks(client, *, season: int, settings_id: int,
+def score_completed_dst_weeks(client, *, season: int, settings_id: str,
                               completed_games: list[dict]) -> list[dict]:
     """Recalculate every completed regular/postseason week for the league."""
     if not completed_games:

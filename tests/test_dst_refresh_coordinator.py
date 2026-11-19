@@ -85,12 +85,12 @@ class CoordinatorTests(unittest.TestCase):
     def test_failed_transition_does_not_run_stage(self):
         journal = self.journal(FakeClient(fail_transition="promoting"))
         called = []
-        with self.assertRaisesRegex(RuntimeError, "recovery completed"):
+        with self.assertRaisesRegex(RuntimeError, "remains prepared and blocked"):
             journal.run(promote=lambda: called.append("promote"),
                         import_events=lambda: None, score=lambda: None,
                         verify=lambda: None,
                         recover=lambda _: called.append("recover"))
-        self.assertEqual(called, ["recover"])
+        self.assertEqual(called, [])
         self.assertEqual(journal.status, "prepared")
 
 

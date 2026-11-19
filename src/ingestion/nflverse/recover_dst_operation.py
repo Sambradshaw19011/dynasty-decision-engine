@@ -68,6 +68,11 @@ def recover_operation(client, *, operation_id: str, execute: bool = False,
     op = matches[0]
     if op["status"] not in ACTIVE:
         raise RuntimeError(f"Operation cannot be recovered from status {op['status']}")
+    if execute and op["status"] == "prepared":
+        raise RuntimeError(
+            "Prepared operation has not entered a write stage; automatic database "
+            "restore is prohibited. Investigate and close the journal safely."
+        )
     season = int(op["season_id"])
     if op["backup_parquet_path"] != f"play_by_play_backups/{season}/{op['backup_parquet_sha256']}.parquet":
         raise RuntimeError("Unexpected immutable Parquet backup path")

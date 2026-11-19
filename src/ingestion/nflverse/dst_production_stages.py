@@ -6,6 +6,7 @@ Only call inside a verified RefreshJournal 'promoting' stage. The CLI
 from __future__ import annotations
 
 import hashlib
+import time
 import requests
 
 BUCKET = "nflverse-data"
@@ -41,9 +42,18 @@ def promote_verified_parquet(client, *, season: int, staged_digest: str,
         data=staged, timeout=600,
     )
     response.raise_for_status()
-    promoted = storage.download(production_path)
-    if sha(promoted) != staged_digest:
-        raise RuntimeError("Production Parquet promotion checksum mismatch")
+    # Storage CDN may serve the previous version briefly after an upsert.
+    deadline = time.monotonic() + 180
+    while True:
+        promoted = storage.download(production_path)
+        observed = sha(promoted)
+        if observed == staged_digest:
+            break
+        if observed != backup_digest:
+            raise RuntimeError(f"Unexpected production checksum: {observed}")
+        if time.monotonic() >= deadline:
+            raise RuntimeError("Production Parquet not visible after 180 seconds")
+        time.sleep(5)
 
 
 def import_verified_fumbles(*, season: int, staged_digest: str,

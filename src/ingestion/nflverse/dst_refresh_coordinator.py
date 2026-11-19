@@ -69,7 +69,7 @@ class RefreshJournal:
             for status, action in (
                 ("promoting", promote),
                 ("importing", lambda: import_events(self.operation_id)),
-                ("scoring", score),
+                ("scoring", lambda: score(self.operation_id)),
                 ("verifying", verify),
             ):
                 self.advance(status)

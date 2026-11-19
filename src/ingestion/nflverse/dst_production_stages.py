@@ -90,6 +90,14 @@ def import_verified_fumbles(*, season: int, staged_digest: str,
                      "confirm": "IMPORT_VERIFIED_EVENTS"})
     if imported.get("success") is not True or imported.get("imported") is None:
         raise RuntimeError(f"Fumble import unconfirmed: {imported}")
+    expected_events = staged.get("events_prepared")
+    if (not isinstance(expected_events, int) or expected_events < 0
+            or type(imported["imported"]) is not int
+            or imported["imported"] != expected_events):
+        raise RuntimeError(
+            f"Fumble import count mismatch: expected {expected_events}, "
+            f"imported {imported['imported']}"
+        )
     return imported
 
 

@@ -37,7 +37,11 @@ class VerifiedRunnerTests(unittest.TestCase):
     def run_stages(self, failure=None, recover_failure=False):
         actions = []
         def stage(name):
-            def call():
+            def call(*args):
+                if name in ("import", "score"):
+                    self.assertEqual(args, (self.client.operation_id,))
+                else:
+                    self.assertEqual(args, ())
                 actions.append(name)
                 if failure == name:
                     raise RuntimeError(f"failed {name}")

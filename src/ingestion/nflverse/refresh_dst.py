@@ -497,6 +497,17 @@ def main():
                 print("Classifier staging audit requires deployed Edge Function support for an allowlisted staging path", flush=True)
             return
 
+        # The production branch below remains disabled by the CLI fail-fast
+        # guard. Its first stage must be an immutable artifact gate and journal
+        # acquisition before any production mutation. This intentionally
+        # prevents the legacy unjournaled promotion path from being re-enabled.
+        from src.ingestion.nflverse.dst_refresh_coordinator import begin_verified_refresh
+        raise RuntimeError(
+            "Legacy unjournaled production path is prohibited. "
+            "Use the verified coordinator with durable database backup and "
+            "recovery callbacks before enabling execution."
+        )
+
         # Production promotion is explicitly gated by a verified staging audit.
         # Preserve the original production bytes in immutable content-addressed
         # backup storage before changing the production object.

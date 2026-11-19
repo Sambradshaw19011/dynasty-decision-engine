@@ -21,7 +21,7 @@ def test_recovery_passes_operation_id_to_fenced_restore_rpc():
     client = Mock()
     client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [op]
     client.storage.from_.return_value.download.side_effect = [
-        b"backup", b"staged", b"production", b"restored",
+        b"backup", b"staged", b"production", b"production", b"restored",
     ]
     client.rpc.return_value.execute.return_value = SimpleNamespace(data={
         "success": True, "changes_committed": True,
@@ -35,7 +35,7 @@ def test_recovery_passes_operation_id_to_fenced_restore_rpc():
         return_value=snapshot,
     ), patch(
         "src.ingestion.nflverse.recover_dst_operation.sha256",
-        side_effect=["a" * 64, "b" * 64, "a" * 64, "a" * 64],
+        side_effect=["a" * 64, "b" * 64, "a" * 64, "a" * 64, "a" * 64],
     ), patch(
         "src.ingestion.nflverse.recover_dst_operation.count_rows",
         return_value=1,

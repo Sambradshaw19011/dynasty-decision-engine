@@ -264,6 +264,10 @@ def execute_coordinated_refresh(client, *, season: int, staged_digest: str,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')
+    parser.add_argument('--coordinator-preflight', action='store_true', help='Read-only coordinator artifact and journal preflight')
+    parser.add_argument('--staged-sha256')
+    parser.add_argument('--backup-parquet-sha256')
+    parser.add_argument('--backup-database-sha256')
     parser.add_argument('--stage', action='store_true', help='Upload generated Parquet to staging only; no import or scoring')
     parser.add_argument('--audit-staging', action='store_true', help='Stage and audit generated Parquet using the deployed Edge Function')
     parser.add_argument('--verify-backup', action='store_true', help='Verify immutable backup of current production Parquet; do not promote or score')
@@ -273,8 +277,11 @@ def main():
     args = parser.parse_args()
     if args.backup_db_with_audit and not args.audit_staging:
         parser.error('--backup-db-with-audit requires --audit-staging')
-    if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.snapshot_db, args.execute)) > 1:
+    if sum((args.stage, args.audit_staging, args.verify_backup, args.verify_recovery, args.snapshot_db, args.execute, args.coordinator_preflight)) > 1:
         parser.error('Choose only one of --stage, --audit-staging, --verify-backup, --verify-recovery, --snapshot-db, or --execute')
+    if args.coordinator_preflight:
+        if not all((args.staged_sha256, args.backup_parquet_sha256, args.backup_database_sha256)):
+            parser.error('--coordinator-preflight requires all three --*-sha256 arguments')
     if args.execute:
         raise RuntimeError(
             "Production --execute remains disabled: coordinated recovery and "
@@ -308,6 +315,18 @@ def main():
         print("WARNING: production refresh is blocked pending recovery", flush=True)
     else:
         print("REFRESH JOURNAL CHECK PASS: no unfinished operations", flush=True)
+    if args.coordinator_preflight:
+        if unfinished:
+            raise RuntimeError("Coordinator preflight blocked by unfinished journal operations")
+        from src.ingestion.nflverse.verify_dst_refresh_artifacts import verify_artifacts
+        report = verify_artifacts(
+            client, season=season, staged_digest=args.staged_sha256,
+            backup_parquet_digest=args.backup_parquet_sha256,
+            backup_database_digest=args.backup_database_sha256,
+        )
+        print(json.dumps(report, indent=2), flush=True)
+        print("COORDINATOR PREFLIGHT PASS: artifacts and journal verified; no production writes", flush=True)
+        return
     if args.snapshot_db:
         # The fumble event table must be configured explicitly; guessing its
         # name could silently omit the data we need to preserve.

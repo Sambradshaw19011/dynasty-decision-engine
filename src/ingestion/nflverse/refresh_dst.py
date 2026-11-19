@@ -232,6 +232,35 @@ def compare_fumble_inputs(existing_bytes, generated_path):
     )
 
 
+
+def execute_coordinated_refresh(client, *, season: int, staged_digest: str,
+                                backup_parquet_digest: str,
+                                backup_database_digest: str,
+                                expected_pbp_rows: int, settings_id: int,
+                                completed_games: list[dict], url: str,
+                                key: str, inspection_secret: str,
+                                production_authorized: bool = False) -> str:
+    """Explicit CLI integration seam for the verified coordinator.
+
+    Intentionally unavailable to production until recovery isolation and
+    concurrent-writer protections are validated. No write-capable function
+    is called when production_authorized is false.
+    """
+    if not production_authorized:
+        raise RuntimeError(
+            "Production coordinated refresh is disabled pending safety validation"
+        )
+    from src.ingestion.nflverse.dst_coordinated_refresh import run_coordinated_dst_refresh
+    return run_coordinated_dst_refresh(
+        client, season=season, staged_digest=staged_digest,
+        backup_parquet_digest=backup_parquet_digest,
+        backup_database_digest=backup_database_digest,
+        expected_pbp_rows=expected_pbp_rows, settings_id=settings_id,
+        completed_games=completed_games, url=url, key=key,
+        inspection_secret=inspection_secret,
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute', action='store_true', help='Upload and import after local verification')

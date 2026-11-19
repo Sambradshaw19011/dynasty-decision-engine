@@ -113,6 +113,16 @@ def recover_operation(client, *, operation_id: str, execute: bool = False,
                     f"Concurrent database change detected during promotion: {table}; "
                     "automatic recovery refused"
                 )
+    # A refresh journal only serializes participating refresh workers.
+    # Once import/scoring has started, a database snapshot cannot distinguish
+    # our writes from unrelated concurrent writes. Never automatically replace
+    # live season rows without an independently enforced writer fence.
+    if execute and op["status"] in {"importing", "scoring", "verifying", "recovery_failed", "recovering"}:
+        raise RuntimeError(
+            "Automatic database rollback after import/scoring is disabled: "
+            "unrelated writers are not fenced. Preserve the operation journal "
+            "and investigate before any manual restore."
+        )
     # Preflight checks ensure the snapshot can be restored safely.
     # The actual restore RPC verifies every row within its transaction.
     counts = {table: count_rows(client, table, season) for table in TABLES}

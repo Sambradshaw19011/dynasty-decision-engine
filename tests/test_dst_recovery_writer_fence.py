@@ -1,18 +1,15 @@
-"""Fail-closed regression tests for D/ST rollback after database mutations."""
+"""Offline regression tests for operation-owned D/ST database recovery."""
+from types import SimpleNamespace
 from unittest.mock import Mock, patch
-
-import pytest
 
 from src.ingestion.nflverse.recover_dst_operation import recover_operation
 
 
-@pytest.mark.parametrize("status", [
-    "importing", "scoring", "verifying", "recovery_failed", "recovering",
-])
-def test_automatic_rollback_refuses_unfenced_database_writers(status):
+def test_recovery_passes_operation_id_to_fenced_restore_rpc():
     season = 2026
+    operation_id = "00000000-0000-0000-0000-000000000001"
     op = {
-        "operation_id": "test-operation", "status": status,
+        "operation_id": operation_id, "status": "recovering",
         "season_id": season,
         "backup_parquet_sha256": "a" * 64,
         "staged_parquet_sha256": "b" * 64,
@@ -23,17 +20,34 @@ def test_automatic_rollback_refuses_unfenced_database_writers(status):
     }
     client = Mock()
     client.table.return_value.select.return_value.eq.return_value.execute.return_value.data = [op]
-    storage = client.storage.from_.return_value
-    storage.download.side_effect = [b"backup", b"staged", b"production"]
+    client.storage.from_.return_value.download.side_effect = [
+        b"backup", b"staged", b"production", b"restored",
+    ]
+    client.rpc.return_value.execute.return_value = SimpleNamespace(data={
+        "success": True, "changes_committed": True,
+    })
+    snapshot = {"tables": {
+        "fact_team_fumble_events": {"row_count": 1},
+        "fact_calculated_team_weekly_scores": {"row_count": 1},
+    }}
     with patch(
         "src.ingestion.nflverse.recover_dst_operation.verify_remote_snapshot",
-        return_value={"tables": {}},
+        return_value=snapshot,
     ), patch(
         "src.ingestion.nflverse.recover_dst_operation.sha256",
-        side_effect=["a" * 64, "b" * 64, "a" * 64],
-    ):
-        with pytest.raises(RuntimeError, match="unrelated writers are not fenced"):
-            recover_operation(client, operation_id="test-operation",
-                              execute=True, url="https://example.supabase.co",
-                              key="test-key")
-    client.rpc.assert_not_called()
+        side_effect=["a" * 64, "b" * 64, "a" * 64, "a" * 64],
+    ), patch(
+        "src.ingestion.nflverse.recover_dst_operation.count_rows",
+        return_value=1,
+    ), patch(
+        "src.ingestion.nflverse.recover_dst_operation.advance",
+    ) as advance:
+        recover_operation(
+            client, operation_id=operation_id, execute=True,
+            url="https://example.supabase.co", key="test-key",
+        )
+    args = client.rpc.call_args
+    assert args.args[0] == "restore_dst_database_snapshot"
+    assert args.args[1]["p_operation_id"] == operation_id
+    advance.assert_called_once()
+    assert advance.call_args.args[2:] == ("recovering", "recovered")

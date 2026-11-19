@@ -96,6 +96,23 @@ def recover_operation(client, *, operation_id: str, execute: bool = False,
     current_digest = sha256(production)
     if current_digest not in (op["backup_parquet_sha256"], op["staged_parquet_sha256"]):
         raise RuntimeError("Production Parquet differs from both recorded versions; manual investigation required")
+    # During promotion, no database import or scoring stage has run.
+    # A database differing from its snapshot therefore signals an unrelated
+    # writer (even if the row counts stayed identical). Refuse to overwrite it.
+    if op["status"] == "promoting" and execute:
+        from src.ingestion.nflverse.refresh_dst import all_rows
+        for table in TABLES:
+            original = snapshot["tables"][table]["rows"]
+            live = all_rows(client, table, "*", {"season_id": season})
+            canonical = lambda rows: sorted(
+                json.dumps(row, sort_keys=True, default=str, separators=(",", ":"))
+                for row in rows
+            )
+            if canonical(live) != canonical(original):
+                raise RuntimeError(
+                    f"Concurrent database change detected during promotion: {table}; "
+                    "automatic recovery refused"
+                )
     # Preflight checks ensure the snapshot can be restored safely.
     # The actual restore RPC verifies every row within its transaction.
     counts = {table: count_rows(client, table, season) for table in TABLES}

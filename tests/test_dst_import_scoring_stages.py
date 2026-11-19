@@ -13,7 +13,7 @@ class ImportAndScoringTests(unittest.TestCase):
         self.season = 2026
         self.staged_digest = "a" * 64
         self.kwargs = dict(season=2026, staged_digest=self.staged_digest,
-                           expected_rows=26246, url="https://example.supabase.co",
+                           expected_rows=26246, operation_id="00000000-0000-0000-0000-000000000001", url="https://example.supabase.co",
                            key="test", inspection_secret="secret")
         self.audit = dict(success=True, mode="audit", parquet_rows=26246,
                           issues_count=0, unclassified_recoveries=0,
@@ -83,7 +83,7 @@ class ImportAndScoringTests(unittest.TestCase):
             {"game_id": "g4", "week": 1, "season_type": "POST"},
         ]
         results = score_completed_dst_weeks(client, season=2026,
-                                            settings_id=1, completed_games=games)
+                                            settings_id="00000000-0000-0000-0000-000000000002", operation_id="00000000-0000-0000-0000-000000000001", completed_games=games)
         self.assertEqual(len(results), 3)
         self.assertEqual(client.rpc.call_count, 3)
 
@@ -92,8 +92,8 @@ class ImportAndScoringTests(unittest.TestCase):
         client.rpc.return_value.execute.return_value.data = None
         with self.assertRaisesRegex(RuntimeError, "Scoring failed"):
             score_completed_dst_weeks(
-                client, season=2026, settings_id=1,
-                completed_games=[{"game_id": "g1", "week": 1, "season_type": "REG"}])
+                client, season=2026, settings_id="00000000-0000-0000-0000-000000000002",
+                operation_id="00000000-0000-0000-0000-000000000001", completed_games=[{"game_id": "g1", "week": 1, "season_type": "REG"}])
 
     def test_unexpected_score_game_fails_closed(self):
         client = Mock()

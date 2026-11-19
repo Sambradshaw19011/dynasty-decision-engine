@@ -95,6 +95,35 @@ class ImportAndScoringTests(unittest.TestCase):
                 client, season=2026, settings_id=1,
                 completed_games=[{"game_id": "g1", "week": 1, "season_type": "REG"}])
 
+    def test_unexpected_score_game_fails_closed(self):
+        client = Mock()
+        games = [{"game_id": "g1", "week": 1, "season_type": "REG"}]
+        rows = [{"game_id": "g1", "team_code": "SF"},
+                {"game_id": "g1", "team_code": "LAR"},
+                {"game_id": "other", "team_code": "NYG"}]
+        with patch("src.ingestion.nflverse.refresh_dst.all_rows", return_value=rows):
+            with self.assertRaisesRegex(RuntimeError, "Unexpected D/ST score game"):
+                verify_completed_dst_scores(client, season=2026,
+                                            settings_id=1, completed_games=games)
+
+    def test_missing_team_code_fails_closed(self):
+        client = Mock()
+        games = [{"game_id": "g1", "week": 1, "season_type": "REG"}]
+        rows = [{"game_id": "g1", "team_code": "SF"},
+                {"game_id": "g1", "team_code": None}]
+        with patch("src.ingestion.nflverse.refresh_dst.all_rows", return_value=rows):
+            with self.assertRaisesRegex(RuntimeError, "Missing D/ST team code"):
+                verify_completed_dst_scores(client, season=2026,
+                                            settings_id=1, completed_games=games)
+
+    def test_duplicate_completed_games_fail_closed(self):
+        client = Mock()
+        games = [{"game_id": "g1", "week": 1, "season_type": "REG"}] * 2
+        with patch("src.ingestion.nflverse.refresh_dst.all_rows", return_value=[]):
+            with self.assertRaisesRegex(RuntimeError, "Duplicate completed game IDs"):
+                verify_completed_dst_scores(client, season=2026,
+                                            settings_id=1, completed_games=games)
+
     def test_score_coverage_requires_two_distinct_teams(self):
         client = Mock()
         games = [{"game_id": "g1", "week": 1, "season_type": "REG"}]

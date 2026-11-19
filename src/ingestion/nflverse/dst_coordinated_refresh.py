@@ -41,9 +41,9 @@ def run_coordinated_dst_refresh(client, *, season: int, staged_digest: str,
             season=season, staged_digest=staged_digest,
             expected_rows=expected_pbp_rows, operation_id=operation_id, url=url, key=key,
             inspection_secret=inspection_secret),
-        score=lambda: score_completed_dst_weeks(
+        score=lambda operation_id: score_completed_dst_weeks(
             client, season=season, settings_id=settings_id,
-            completed_games=completed_games),
+            operation_id=operation_id, completed_games=completed_games),
         verify=lambda: verify_completed_dst_scores(
             client, season=season, settings_id=settings_id,
             completed_games=completed_games),

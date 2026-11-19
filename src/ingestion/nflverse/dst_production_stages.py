@@ -32,6 +32,8 @@ def promote_verified_parquet(client, *, season: int, staged_digest: str,
         raise RuntimeError("Staged Parquet checksum mismatch before promotion")
     if sha(backup) != backup_digest:
         raise RuntimeError("Backup Parquet checksum mismatch before promotion")
+    if sha(current) == staged_digest:
+        return  # Previously uploaded staged bytes are already in production.
     if sha(current) != backup_digest:
         raise RuntimeError("Production Parquet changed before promotion; refusing overwrite")
 

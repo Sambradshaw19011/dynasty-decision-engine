@@ -16,7 +16,7 @@ from src.ingestion.nflverse.recover_dst_operation import recover_operation
 def run_coordinated_dst_refresh(client, *, season: int, staged_digest: str,
                                 backup_parquet_digest: str,
                                 backup_database_digest: str,
-                                expected_pbp_rows: int, settings_id: int,
+                                expected_pbp_rows: int, settings_id: str,
                                 completed_games: list[dict], url: str,
                                 key: str, inspection_secret: str) -> str:
     """Execute four verified stages, with full recovery on handled failure.
@@ -37,9 +37,9 @@ def run_coordinated_dst_refresh(client, *, season: int, staged_digest: str,
         promote=lambda: promote_verified_parquet(
             client, season=season, staged_digest=staged_digest,
             backup_digest=backup_parquet_digest, url=url, key=key),
-        import_events=lambda: import_verified_fumbles(
+        import_events=lambda operation_id: import_verified_fumbles(
             season=season, staged_digest=staged_digest,
-            expected_rows=expected_pbp_rows, url=url, key=key,
+            expected_rows=expected_pbp_rows, operation_id=operation_id, url=url, key=key,
             inspection_secret=inspection_secret),
         score=lambda: score_completed_dst_weeks(
             client, season=season, settings_id=settings_id,

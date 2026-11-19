@@ -285,12 +285,6 @@ def main():
     if args.execute:
         if not all((args.staged_sha256, args.backup_parquet_sha256, args.backup_database_sha256)):
             parser.error('--execute requires all three verified --*-sha256 arguments')
-        raise RuntimeError(
-            'Production --execute is not authorized: the import and scoring RPCs '
-            'do not yet enforce an exclusive database writer fence. '
-            'The coordinator is implemented, but enabling it now could overwrite '
-            'unrelated database changes during recovery. No production changes made.'
-        )
     load_dotenv(dotenv_path=Path(__file__).resolve().parents[3] / '.env', override=False)
     url = required("SUPABASE_URL").rstrip("/")
     key = required("SUPABASE_SERVICE_ROLE_KEY")
@@ -393,6 +387,55 @@ def main():
              and g.get("season_type") in ("REG", "POST")]
     if not final:
         raise RuntimeError("No completed games found; refusing to overwrite PBP")
+
+    if args.execute:
+        # Execute exclusively from the immutable, previously audited artifacts.
+        # Do not regenerate a timestamped Parquet and silently change its digest.
+        import io
+        import uuid
+        from src.ingestion.nflverse.verify_dst_refresh_artifacts import verify_artifacts
+        from src.ingestion.nflverse.dst_durable_backup import verify_remote_snapshot
+
+        settings_id = str(uuid.UUID(settings_id))
+        report = verify_artifacts(
+            client, season=season, staged_digest=args.staged_sha256,
+            backup_parquet_digest=args.backup_parquet_sha256,
+            backup_database_digest=args.backup_database_sha256,
+        )
+        snapshot = verify_remote_snapshot(
+            client, bucket=BUCKET, season=season,
+            object_path=report["paths"]["backup_database"],
+            digest=args.backup_database_sha256,
+        )
+        # A durable backup must still describe the live database exactly.
+        # Otherwise rollback could destroy unrelated changes made since backup.
+        for table_name, table_snapshot in snapshot["tables"].items():
+            live = all_rows(client, table_name, "*", {"season_id": season})
+            canonical = lambda rows: sorted(
+                json.dumps(row, sort_keys=True, default=str, separators=(",", ":"))
+                for row in rows
+            )
+            if canonical(live) != canonical(table_snapshot["rows"]):
+                raise RuntimeError(
+                    f"Database changed since durable backup: {table_name}. "
+                    "Recreate and verify backup before executing."
+                )
+        staged_bytes = client.storage.from_(BUCKET).download(report["paths"]["staging"])
+        expected_rows = pq.read_metadata(io.BytesIO(staged_bytes)).num_rows
+        if expected_rows <= 0:
+            raise RuntimeError("Staged Parquet has no rows")
+        print(f"EXECUTION PREFLIGHT PASS: {expected_rows:,} staged plays; "
+              f"{len(final)} completed games; database backup unchanged", flush=True)
+        operation_id = execute_coordinated_refresh(
+            client, season=season, staged_digest=args.staged_sha256,
+            backup_parquet_digest=args.backup_parquet_sha256,
+            backup_database_digest=args.backup_database_sha256,
+            expected_pbp_rows=expected_rows, settings_id=settings_id,
+            completed_games=final, url=url, key=key,
+            inspection_secret=secret, production_authorized=True,
+        )
+        print(f"COORDINATED D/ST REFRESH COMPLETED: {operation_id}", flush=True)
+        return
 
     # NFLverse returns a full-season dataset, not only the latest week.
     frame = nfl.load_pbp(seasons=[season])
